@@ -11,10 +11,10 @@ const {
 
 
 
-app.use(express.json());
-app.use(express.urlencoded({
-    extended: false
-}));
+// app.use(express.json());
+// app.use(express.urlencoded({
+//     extended: false
+// }));
 
 const pool = new Pool({
     user: process.env.POSTGRES_USER || 'postgres',
