@@ -56,23 +56,9 @@ public BackendUrl: string = "http://184.173.5.249:30006"
 
   addSteps() {
     let alert = this.alertCtrl.create({
-      title: 'Log Steps',
-      buttons: [
-        {
-          text: 'Add', handler: data => {
-              var Review = JSON.stringify(data.number);
-              console.log(Review)
-          }
-        }
-      ],
-      inputs: [
-        {
-          name: 'number',
-          placeholder: 'please enter the number',
-        },
-      ],
-      cssClass: 'alertstar',
-      enableBackdropDismiss: false
+      title: 'Success',
+      subTitle: 'We have added 10 steps to your account',
+      buttons: ['Cool']
     });
     alert.present();
   }
