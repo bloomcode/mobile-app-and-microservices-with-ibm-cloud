@@ -1,7 +1,3 @@
-
-
-# End to End MicroServices design on Kubernetes with Node.js and PostGres
-
 Table of Contents
 =================
 
@@ -11,11 +7,13 @@ Table of Contents
       * [Featured Technologies](#featured-technologies)
    * [Prerequisites](#prerequisites)
    * [Steps](#steps)
-         * [1. Clone the repo](#1-clone-the-repo)
-         * [2. Create IBM Cloud Kubernetes Service](#2-create-ibm-cloud-kubernetes-service)
-         * [3. Create and Deploy Nodejs Microservices](#3-create-and-deploy-nodejs-microservices)
+      * [a. Clone the repo](#a-clone-the-repo)
+      * [b. Create IBM Cloud Kubernetes Service](#b-create-ibm-cloud-kubernetes-service)
+      * [c. Create and Deploy Nodejs Microservices](#c-create-and-deploy-nodejs-microservices)
    * [Learn more](#learn-more)
    * [License](#license)
+
+# End to End MicroServices design on Kubernetes with Node.js and PostGres
 
 In this code pattern, we will create a simple step tracker iOS app written in Swift. The application's backend will written in Node.js.
 
@@ -67,13 +65,13 @@ When you have completed this code pattern, you will understand how to:
 
 # Steps
 
-### 1. Clone the repo
+## a. Clone the repo
 ```
 $ git clone https://github.com/bloomcode/mobile-app-and-microservices-with-ibm-cloud
 $ cd mobile-app-and-microservices-with-ibm-cloud
 ```
 
-### 2. Create IBM Cloud Kubernetes Service
+## b. Create IBM Cloud Kubernetes Service
 
 Create an IBM Cloud Kubernetes Service if you don't already have one:
 
@@ -81,7 +79,7 @@ Create an IBM Cloud Kubernetes Service if you don't already have one:
 
 * Simple tutorial to build an docker image and deploy it on kube - [click here](https://cloud.ibm.com/docs/containers?topic=containers-cs_apps_tutorial#cs_apps_tutorial_lesson1)
 
-### 3. Create and Deploy Nodejs Microservices
+## c. Create and Deploy Nodejs Microservices
 
 * The Nodejs applications are already built. Their source code is in their respective folders in `KubeNodeServer/dockerimages/` folder. 
 
