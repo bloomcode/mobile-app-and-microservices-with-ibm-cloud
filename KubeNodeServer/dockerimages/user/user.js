@@ -25,10 +25,9 @@ const pool = new Pool({
 })
 
 var healthCheck = (request, response) => {
-    //TODO: to be implemented
     try {
         var responseObj = {};
-        responseObj.Status = 'passed';
+        responseObj.status = 'ok';
         response.status(200).json(responseObj).end();
     } catch (exception) {
         response.status(500).json(resp).end();
@@ -36,7 +35,6 @@ var healthCheck = (request, response) => {
 };
 
 generateNewAvatar = (req, res) => {
-    console.log(chalk.red('\n----->> generateNewAvatar \n'));
     var defer = Q.defer();
 
     rest.get(`http://avatar-rainbow.mybluemix.net/new`).on('complete', function (data, response) {
@@ -64,7 +62,7 @@ generateNewAvatar = (req, res) => {
 
 registerNewUser = (req, resp) => {
     const userId = req.body.name;
-    pool.query(`INSERT INTO users(userId, image, steps) VALUES ('${userId}', '${req.body.image}', '0')`, (err, res) => {
+    pool.query(`INSERT INTO users(userId, image, steps, fitcoins) VALUES ('${userId}', '${req.body.image}', '0', '0')`, (err, res) => {
         console.log(err, res)
         if (err) {
             resp.end(err);
@@ -76,7 +74,7 @@ registerNewUser = (req, resp) => {
                 name: req.body.name,
                 image: req.body.image,
                 steps: 0,
-                fitcoin: 0
+                fitcoins: 0
             }));
         }
     })
@@ -93,7 +91,7 @@ getAllUsersFromDB = (req, response) => {
 }
 
 getAllUsersWithoutImage = (req, response) => {
-    pool.query(`SELECT userId, steps from users`, (err, res) => {
+    pool.query(`SELECT userId, steps, fitcoins from users`, (err, res) => {
         if (err) {
             throw err;
         }
@@ -115,13 +113,38 @@ getUser = (request, response) => {
 
 updateUser = (request, response) => {
     const userId = request.params.userId;
-    const steps = request.body.steps;
-    pool.query(`UPDATE users SET steps = $2 WHERE userId = $1`, [userId, steps], (err, res) => {
+    const stepsToAdd = request.body.steps;
+
+    var steps = 0;
+    var fitcoins = 0;
+    pool.query(`SELECT steps, fitcoins FROM users WHERE userId = $1`, [userId], (err, res) => {
         if (err) {
             throw err;
         }
-        
-        response.status(200).json(res.rows);
+ 
+        if (res) {
+            var rows = res.rows;
+            if (rows.length == 1) {
+                steps = parseInt(rows[0].steps);
+                fitcoins = parseInt(rows[0].fitcoins);
+
+                steps = steps + stepsToAdd;
+                fitcoins = fitcoins + (stepsToAdd / 5);
+
+                // Adding steps, 10 steps count to 1 fitcoin
+                pool.query(`UPDATE users SET steps = $2, fitcoins = $3 WHERE userId = $1`, [userId, steps, fitcoins], (err, res) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    response.status(200).json({
+                        name: userId,
+                        steps: steps,
+                        fitcoins: fitcoins
+                    });
+                });
+            }
+        }
     });
 }
 

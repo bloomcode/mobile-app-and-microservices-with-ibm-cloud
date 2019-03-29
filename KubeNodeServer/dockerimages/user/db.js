@@ -31,7 +31,7 @@ function connection() {
             release()
             if (err) {
                 console.log("No users db found...!!!!\n Creating new db now...!!!")
-                pool.query('CREATE TABLE users (userId text NOT NULL PRIMARY KEY, image text NOT NULL, steps bigint NOT NULL);', (err, result) => {
+                pool.query('CREATE TABLE users (userId text NOT NULL PRIMARY KEY, image text NOT NULL, steps bigint NOT NULL, fitcoins bigint NOT NULL);', (err, result) => {
                     release()
                     if (err) {
                         return console.error('Error executing query', err.stack)
@@ -40,7 +40,7 @@ function connection() {
                     defer.resolve();
                 })
             }
-            console.log("Successfully Connected to Postgres userdata Db ")
+            console.log("Successfully Connected to Postgres DB - " + process.env.POSTGRES_DB)
         })
     })
 
