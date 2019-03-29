@@ -1,5 +1,3 @@
-# Node-on-Kubernetes
-
 
 # End to End MicroServices design on Kubernetes with Node.js and PostGres
 
