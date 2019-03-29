@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Avatar } from 'ionic-angular';
+import { NavController, Avatar, AlertController, LoadingController } from 'ionic-angular';
 import { Pedometer } from '@ionic-native/pedometer/ngx';
 import { IonicStorageModule } from '@ionic/storage';
 import { Observable } from 'rxjs/Observable';
@@ -33,26 +33,34 @@ public userSteps: string;
 public userScrollView: string;
 public userName: string;
 public userId: string;
-public BackendUrl: string = "http://184.173.5.249:30000"
+public BackendUrl: string = "http://184.173.5.249:30006"
 
 
-  constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer) {
-
+  constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
     this.httpClient.generateAvatar(this.BackendUrl).subscribe((Avatar) => {
-      
       var useravatar = new UserAvatar(Avatar);
-      this.displayImage ="data:image/png;base64, "+ useravatar.image;
-      this.displayImage.replace('unsafe:','');
       this.httpClient.registerUser(this.BackendUrl, Avatar).subscribe((Response) => {
+        loading.dismiss();
         this.userName = Response['name']
-        this.userFitcoins = Response['fitcoin']
+        this.userFitcoins = Response['fitcoin'] + " fitcoins"
         this.userId = Response['userId']
-      
+        this.displayImage ="data:image/png;base64, "+ useravatar.image;
+        this.presentAlert()
       })
   });
-
   }
 
-
+  presentAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Hi, ' + this.userName,
+      subTitle: 'You were enrolled and given this random name and avatar.',
+      buttons: ['Cool']
+    });
+    alert.present();
+  }
  
 }
