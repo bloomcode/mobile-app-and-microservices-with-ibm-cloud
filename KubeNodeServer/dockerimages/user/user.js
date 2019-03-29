@@ -48,8 +48,8 @@ generateNewAvatar = (req, res) => {
         if (response.statusCode == 200) {
             console.log("Success");
             AvatarData = data;
-            console.log(JSON.stringify(data));
-            console.log(data);
+            // console.log(JSON.stringify(data));
+            // console.log(data);
 
             res.writeHead(200, {
                 "Content-Type": "text/json"
@@ -109,7 +109,7 @@ registerNewUser = (req, resp) => {
     // console.log(User)
     // console.log(UserNoImage)
 
-    pool.connect();
+    // pool.connect();
 
     var UserData = Buffer.from(JSON.stringify(User)).toString('base64');
     var UserDataNoImage = Buffer.from(JSON.stringify(UserNoImage)).toString('base64');
@@ -119,7 +119,6 @@ registerNewUser = (req, resp) => {
         if (err) {
             resp.end(err);
         } else {
-
             resp.writeHead(200, {
                 "Content-Type": "text/json"
             });
@@ -135,39 +134,96 @@ registerNewUser = (req, resp) => {
 getAllUsersFromDB = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersFromDB \n'));
     var allUsersFromDB = [];
-    pool.connect();
+    // pool.connect();
 
     // db.connection();
     pool.query(`SELECT * from  userdata`, (err, res) => {
-        console.log("IN Query")
+        console.log("IN getAllUsersFromDB Query")
+        if (err) {
+            console.log(err);
+            response.writeHead(404, {
+                "Content-Type": "text/json"
+            });
+            response.end(JSON.stringify(err));
+            return;
+        }
         var i = 0;
         for (var rows in res.rows) {
             allUsersFromDB.push(JSON.parse(Buffer.from(res.rows[i].withimagedata, 'base64').toString()));
             i++;
         }
-        console.log(allUsersFromDB)
-        response.end(JSON.stringify(allUsersFromDB))
+        // console.log(allUsersFromDB)
+        console.log("user Count : ", i);
+        // pool.end();
+        response.writeHead(200, {
+            "Content-Type": "text/json"
+        });
+        response.end(JSON.stringify(allUsersFromDB));
     });
 
 }
-
 
 getAllUsersWithoutImage = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersWithoutImage \n'));
     var allUsersWithoutImage = [];
 
-    pool.connect();
+    // pool.connect();
 
     pool.query(`SELECT * from  userdata`, (err, res) => {
-        console.log("IN Query")
+        console.log("IN getAllUsersWithoutImage Query")
+        if (err) {
+            console.log(err);
+            response.writeHead(404, {
+                "Content-Type": "text/json"
+            });
+            response.end(JSON.stringify(err));
+            return;
+        }
         var i = 0;
         for (var rows in res.rows) {
             allUsersWithoutImage.push(JSON.parse(Buffer.from(res.rows[i].noimagedata, 'base64').toString()));
             i++;
         }
-        console.log(allUsersWithoutImage)
+        // console.log(allUsersWithoutImage);
+        console.log("user Count : ", i);
+        // pool.end();
+        response.writeHead(200, {
+            "Content-Type": "text/json"
+        });
         response.end(JSON.stringify(allUsersWithoutImage))
     });
+}
+
+
+
+delAllUsers = (req, response) => {
+    console.log(chalk.red('\n----->> delAllUsers \n'));
+
+
+    if (req.body.auth == "ConfirmDeleteFinalChecked") {
+        pool.query(`delete from userdata`, (err, res) => {
+            console.log("IN delAllUsers Query")
+            if (err) {
+                console.log(err);
+                response.writeHead(404, {
+                    "Content-Type": "text/json"
+                });
+                response.end(JSON.stringify(err));
+                return;
+            }
+            response.writeHead(200, {
+                "Content-Type": "text/json"
+            });
+            response.end(JSON.stringify("Deleted all user"))
+        });
+    }else{
+        response.writeHead(401, {
+            "Content-Type": "text/json"
+        });
+        response.end("UnAuthorised...!!!!");
+    }
+
+
 }
 
 
@@ -193,5 +249,6 @@ app.get("/users/generate", (req, res) => {
 app.post("/users", registerNewUser);
 app.get("/users/complete", getAllUsersFromDB);
 app.get("/users", getAllUsersWithoutImage);
+app.post("/deleteAllUsers", delAllUsers);
 // app.get("/users", getOneUser);
 // app.put("/users", updateOneUserSteps);
