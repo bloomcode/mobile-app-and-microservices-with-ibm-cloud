@@ -34,8 +34,8 @@ spec:
     spec:
       containers:
         - name: users
-          image: us.icr.io/kubespace/node-users
-          # image: <ur-dockerregistry-image>
+          # image: us.icr.io/kubespace/node-users
+          image: <ur-dockerregistry-image>
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
