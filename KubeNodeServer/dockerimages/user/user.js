@@ -4,13 +4,15 @@ const express = require('express'),
     Q = require('q'),
     rest = require('restler'),
     uuid = require('uuid'),
-    chalk = require('chalk')
+    chalk = require('chalk'),
+    cors = require('cors')
 db = require('./db');
 const {
     Pool,
     Client
 } = require('pg');
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false

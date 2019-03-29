@@ -3,14 +3,15 @@ const express = require('express'),
     http = require('http'),
     Q = require('q'),
     chalk = require('chalk'),
-    db = require('./db');
+    db = require('./db'),
+    cors = require('cors');
 const {
     Pool,
     Client
 } = require('pg');
 
 
-
+app.use(cors());
 // app.use(express.json());
 // app.use(express.urlencoded({
 //     extended: false
