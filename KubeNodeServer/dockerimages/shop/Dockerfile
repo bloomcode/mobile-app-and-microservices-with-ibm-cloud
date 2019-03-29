@@ -10,7 +10,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-ENV PORT 8080
-EXPOSE 8080
+ENV PORT 8082
+EXPOSE 8082
 
 CMD [ "npm", "start" ]

@@ -35,7 +35,7 @@ spec:
       containers:
         - name: leaderboard
           # image: us.icr.io/kubespace/node-leaderboard
-          image: <ur-dockerregistry-image>
+          image: us.icr.io/fitlead/node-leaderboard
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

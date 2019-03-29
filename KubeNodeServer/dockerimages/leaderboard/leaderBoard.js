@@ -60,7 +60,7 @@ addProduct = (req, response) => {
 getAllUsersSorted = (req, response) => {
     db.connection();
 
-    pool.query(`SELECT * FROM  users ORDER BY fitcoins DESC`, (err, res) => {
+    pool.query(`SELECT * FROM  users ORDER BY steps DESC`, (err, res) => {
         if (err) {
             throw err;
         }

@@ -59,27 +59,73 @@ addProduct = (req, response) => {
 
 
 getAllProducts = (req, response) => {
-    console.log(chalk.red('\n----->> getAllProducts \n'));
-    var AllProducts = [];
-
-    db.connection();
-    pool.query(`SELECT * from  shopdata`, (err, res) => {
-        console.log("IN Query")
-        var i = 0;
+    pool.query(`SELECT * from  shop`, (err, res) => {
         if (err) {
-            console.error(err.stack);
-            response.end(JSON.stringify(err));
-        } else {
-            for (var rows in res.rows) {
-                AllProducts.push(JSON.parse(Buffer.from(res.rows[i].stock, 'base64').toString()));
-                i++;
-            }
-            console.log(AllProducts);
-            response.end(JSON.stringify(AllProducts))
+            throw err;
         }
-    })
+        
+        response.status(200).json(res.rows);
+    });
 }
 
+buyProduct = (req, response) => {
+    const item = req.params.item;
+    const userId = req.body.name;
+
+    var itemStock = 0;
+    var itemCoins = 0;
+
+    pool.query(`SELECT * from shop WHERE item = $1`, [item], (err, res) => {
+        if (err) {
+            throw err;
+        }
+        
+        if (res) {
+            var rows = res.rows;
+            if (rows.length == 1) {
+                itemStock = rows[0].stock;
+                itemCoins = rows[0].coins;
+            }
+        }
+
+        console.log("Item Stock - " + itemStock);
+        console.log("Item coins - " + itemCoins);
+
+        if (itemStock > 0) {
+            pool.query(`SELECT fitcoins FROM users WHERE userId = $1`, [userId], (err, res) => {
+                if (err) {
+                    throw err;
+                }
+         
+                if (res) {
+                    console.log("In res if  " + JSON.stringify(res.rows));
+                    var rows = res.rows;
+                    if (rows.length == 1) {
+                        fitcoins = parseInt(rows[0].fitcoins);
+        
+                        console.log("fitcoins available - " + fitcoins);
+                        if (fitcoins >= itemCoins) {
+                            pool.query(`UPDATE users SET fitcoins = $2 WHERE userId = $1`, [userId, (fitcoins - itemCoins)], (err, res) => {
+                                if (err) {
+                                    throw err;
+                                }
+            
+                                response.status(200).json({
+                                    name: userId,
+                                    fitcoins: fitcoins
+                                });
+                            });
+                        }  else {
+                            response.status(200).json({ "status" : "Insufficient fitcoin balance" }); 
+                        }
+                    }
+                }
+            });
+        } else {
+            response.status(200).json({ "status" : "Item out of stock" }); 
+        }
+    });
+}
 
 
 var server = http.createServer(app);
@@ -100,9 +146,10 @@ server.on('listening', function onListening() {
 
 
 app.get('/shop/health', healthCheck);
-app.get("/shop/products", getAllProducts)
+app.get("/shop/products", getAllProducts);
+app.post("/shop/order/:item", buyProduct);
+
 // app.get("/shop/products", getOneProduct)
-app.post("/shop/products", addProduct)
 // app.put("/shop/products", updateProduct)
 // app.get("/shop/transactions", getAllTransactions)
 // app.get("/shop/transactions", getOneTransaction)
