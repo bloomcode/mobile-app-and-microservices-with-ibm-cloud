@@ -3,7 +3,8 @@ const express = require('express'),
     http = require('http'),
     Q = require('q'),
     rest = require('restler'),
-    chalk = require('chalk');
+    chalk = require('chalk'),
+    db= require('./db');
 const {
     Pool,
     Client
@@ -39,7 +40,7 @@ var healthCheck = (request, response) => {
 addProduct = (req, response) => {
     console.log(chalk.red('\n----->> addProduct \n'));
 
-    pool.connect();
+    db.connection();
 
     console.log(JSON.stringify(req.body))
     var addProductData = Buffer.from(JSON.stringify(req.body)).toString('base64');
@@ -61,7 +62,7 @@ getAllProducts = (req, response) => {
     console.log(chalk.red('\n----->> getAllProducts \n'));
     var AllProducts = [];
 
-    pool.connect();
+    db.connection();
     pool.query(`SELECT * from  shopdata`, (err, res) => {
         console.log("IN Query")
         var i = 0;
@@ -88,13 +89,17 @@ server.listen(process.env.PORT || 3001);
 server.on('error', function onError(error) {
     console.log(JSON.stringify(error));
 });
+
+
+
 server.on('listening', function onListening() {
     var addr = server.address();
+    db.connection();
     console.log('Listening on ' + addr.port);
 });
 
 
-app.get('/user/health', healthCheck);
+app.get('/shop/health', healthCheck);
 app.get("/shop/products", getAllProducts)
 // app.get("/shop/products", getOneProduct)
 app.post("/shop/products", addProduct)

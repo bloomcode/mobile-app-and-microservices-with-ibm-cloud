@@ -4,7 +4,8 @@ const express = require('express'),
     Q = require('q'),
     rest = require('restler'),
     uuid = require('uuid'),
-    chalk = require('chalk');
+    chalk = require('chalk')
+    db= require('./db');
 const {
     Pool,
     Client
@@ -92,7 +93,7 @@ registerNewUser = (req, res) => {
     var UserData = Buffer.from(JSON.stringify(User)).toString('base64');
     var UserDataNoImage = Buffer.from(JSON.stringify(UserNoImage)).toString('base64');
 
-    pool.query(`INSERT INTO userdatabase64(ID, WITHIMAGEDATA,NOIMAGEDATA)VALUES ('${User.userId}', '${UserData}','${UserDataNoImage}')`, (err, res) => {
+    pool.query(`INSERT INTO userdata(ID, WITHIMAGEDATA,NOIMAGEDATA)VALUES ('${User.userId}', '${UserData}','${UserDataNoImage}')`, (err, res) => {
         console.log(err, res)
         // client.end()
     })
@@ -104,9 +105,10 @@ registerNewUser = (req, res) => {
 getAllUsersFromDB = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersFromDB \n'));
     var allUsersFromDB = [];
-    pool.connect()
+    // pool.connect()
 
-    pool.query(`SELECT * from  userdatabase64`, (err, res) => {
+    db.connection();
+    pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")
         var i = 0;
         for (var rows in res.rows) {
@@ -123,8 +125,10 @@ getAllUsersFromDB = (req, response) => {
 getAllUsersWithoutImage = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersWithoutImage \n'));
     var allUsersWithoutImage = [];
+    
+    db.connection();
 
-    pool.query(`SELECT * from  userdatabase64`, (err, res) => {
+    pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")
         var i = 0;
         for (var rows in res.rows) {
@@ -144,8 +148,10 @@ server.listen(process.env.PORT || 3000);
 server.on('error', function onError(error) {
     console.log(JSON.stringify(error));
 });
+
 server.on('listening', function onListening() {
     var addr = server.address();
+    db.connection();
     console.log('Listening on ' + addr.port);
 });
 
