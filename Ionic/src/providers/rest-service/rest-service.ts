@@ -36,7 +36,11 @@ addSteps(BackendUrl: string, steps: string, userID: string) {
   let data = {
     'steps' : steps
   }
-  return this.http.post(BackendUrl + '/users', data, {headers: headerss});
+  return this.http.post(BackendUrl + '/users/' + userID, data, {headers: headerss});
+}
+
+updateUser(BackendUrl: string, userID: string) {
+  return this.http.get(BackendUrl + '/users/' + userID);
 }
 
 generateAvatar(BackendUrl: string) {

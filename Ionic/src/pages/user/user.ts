@@ -55,12 +55,21 @@ public BackendUrl: string = "http://184.173.5.249:30006"
   }
 
   addSteps() {
-    let alert = this.alertCtrl.create({
-      title: 'Success',
-      subTitle: 'We have added 10 steps to your account',
-      buttons: ['Cool']
+    this.httpClient.addSteps(this.BackendUrl, '10', this.userId).subscribe((response) => { 
+      let alert = this.alertCtrl.create({
+        title: 'Success',
+        subTitle: 'We have added 10 steps to your account',
+        buttons: ['Cool']
+      });
+      alert.present();
+      this.updateUserDetails();
     });
-    alert.present();
+  }
+
+  updateUserDetails() {
+    this.httpClient.updateUser(this.BackendUrl, this.userId).subscribe((response) => { 
+        this.userFitcoins = Response['fitcoin'] + " fitcoins"
+    });
   }
 
   presentAlert() {
