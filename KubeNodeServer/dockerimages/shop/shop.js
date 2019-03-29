@@ -83,8 +83,8 @@ buyProduct = (req, response) => {
         if (res) {
             var rows = res.rows;
             if (rows.length == 1) {
-                itemStock = rows[0].stock;
-                itemCoins = rows[0].coins;
+                itemStock = parseInt(rows[0].stock);
+                itemCoins = parseInt(rows[0].coins);
             }
         }
 
