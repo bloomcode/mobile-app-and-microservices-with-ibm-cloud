@@ -8,26 +8,12 @@
 <ion-content padding id="page6">
   <div id="leaderboard-container4">
     <ion-list id="leaderboard-list4">
-      <ion-item color="none" id="leaderboard-list-item14">
+      <ion-item color="none" id="leaderboard-list-item14"  *ngFor="let user of userList">
         <ion-avatar item-left>
-          <img src="assets/img/5wJNRkzmSb614OKmS85B_avatar.png" />
+          <img [src]="sanitizer.bypassSecurityTrustUrl(user.image)" />
         </ion-avatar>
-        <h1>Vittal R Pai</h1>
-        <p>5020 Steps</p>
-      </ion-item>
-      <ion-item color="none" id="leaderboard-list-item15">
-        <ion-avatar item-left>
-          <img src="assets/img/5wJNRkzmSb614OKmS85B_avatar.png" />
-        </ion-avatar>
-        <h1>Vittal R Pai</h1>
-        <p>5020 Steps</p>
-      </ion-item>
-      <ion-item color="none" id="leaderboard-list-item16">
-        <ion-avatar item-left>
-          <img src="assets/img/5wJNRkzmSb614OKmS85B_avatar.png" />
-        </ion-avatar>
-        <h1>Vittal R Pai</h1>
-        <p>5020 Steps</p>
+        <h1>{{user.name}}</h1>
+        <p>{{user.steps}}</p>
       </ion-item>
     </ion-list>
   </div>

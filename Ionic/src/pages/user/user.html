@@ -6,18 +6,18 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page5">
-  <div id="user-container3">
-    <img src="assets/img/uDAH1RTpRTGBQgnmWcFZ_avatar.png" style="display:block;width:50%;height:auto;margin-left:auto;margin-right:auto;" />
+  <div id="user-container3" *ngIf="displayImage">
+    <img [src]="sanitizer.bypassSecurityTrustUrl(displayImage)" style="display:block;width:150px;height:auto;margin-left:auto;margin-right:auto;" />
   </div>
   <h3 id="user-heading3" style="color:#000000;text-align:center;">
-    Vittal
+    {{userName}}
   </h3>
   <div id="user-markdown6" style="text-align:center;" class="show-list-numbers-and-dots">
     <p style="color:#000000;">
-      12312321321312312312312
+      {{userId}}
     </p>
   </div>
   <h4 id="user-heading4" style="color:#000000;text-align:center;">
-    150 fitcoins
+    {{userFitcoins}} fitcoins
   </h4>
 </ion-content>
