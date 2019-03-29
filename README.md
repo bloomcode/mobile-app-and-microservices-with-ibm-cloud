@@ -55,8 +55,8 @@ When you have completed this code pattern, you will understand how to:
 
 ### 1. Clone the repo
 ```
-$ git clone https://github.com/charankumarpalla/Node-on-Kubernetes
-$ cd Node-on-kubernetes
+$ git clone https://github.com/bloomcode/mobile-app-and-microservices-with-ibm-cloud
+$ cd mobile-app-and-microservices-with-ibm-cloud
 ```
 
 ### 2. Create IBM Cloud Kubernetes Service
@@ -126,8 +126,8 @@ $ bx cs cluster-get <Your cluster name here>
 
 ## You should look for these values
 ## ..
-## Ingress Subdomain:	anthony-dev.us-south.containers.mybluemix.net
-## Ingress Secret:		anthony-dev
+## Ingress Subdomain: anthony-dev.us-south.containers.mybluemix.net
+## Ingress Secret:    anthony-dev
 ## ..
 ```
 

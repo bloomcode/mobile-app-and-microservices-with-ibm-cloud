@@ -5,7 +5,7 @@
   "main": "leaderBoard.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node shop.js"
+    "start": "node shop.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/bloomcode/mobile-app-and-microservices-with-ibm-cloud#readme",
   "dependencies": {
-    "Q": "^1.0.0",
     "chalk": "^2.4.2",
     "express": "^4.16.4",
     "http": "0.0.0",
     "pg": "^7.9.0",
+    "q": "^1.5.1",
     "restler": "^3.4.0",
     "uuid": "^3.3.2"
   }
