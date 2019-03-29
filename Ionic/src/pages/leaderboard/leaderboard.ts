@@ -38,7 +38,7 @@ export class LeaderboardPage {
          var userJSON = JSON.stringify(Userdata);
          var parsedUserdata = JSON.parse(userJSON);
         for (var i=0;i<parsedUserdata.length;i++) {
-          var user = new User((i+1).toString() +". "+ parsedUserdata[i]['name'],"data:image/png;base64, " + parsedUserdata[i]['image'],parsedUserdata[i]['steps']);
+          var user = new User((i+1).toString() +". "+ parsedUserdata[i]['userid'],"data:image/png;base64, " + parsedUserdata[i]['image'],parsedUserdata[i]['steps']);
           this.userList.push(user);
           
        }
