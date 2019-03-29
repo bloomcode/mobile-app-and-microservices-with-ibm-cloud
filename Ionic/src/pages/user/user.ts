@@ -33,7 +33,7 @@ public userSteps: string;
 public userScrollView: string;
 public userName: string;
 public userId: string;
-public BackendUrl: string = "http://localhost:8080"
+public BackendUrl: string = "http://173.193.99.112:30000"
 
 
   constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
@@ -46,8 +46,8 @@ public BackendUrl: string = "http://localhost:8080"
       this.httpClient.registerUser(this.BackendUrl, Avatar).subscribe((Response) => {
         loading.dismiss();
         this.userName = Response['name']
-        this.userFitcoins = Response['fitcoin'] + " fitcoins"
-        this.userId = Response['userId']
+        this.userFitcoins = Response['fitcoins'] + " fitcoins"
+        this.userId = Response['name']
         this.displayImage ="data:image/png;base64, "+ useravatar.image;
         this.presentAlert()
       })
@@ -67,8 +67,9 @@ public BackendUrl: string = "http://localhost:8080"
   }
 
   updateUserDetails() {
-    this.httpClient.updateUser(this.BackendUrl, this.userId).subscribe((response) => { 
-        this.userFitcoins = Response['fitcoin'] + " fitcoins"
+    this.httpClient.updateUser(this.BackendUrl, this.userId).subscribe((resp) => { 
+      console.log('vittal' + JSON.stringify(resp))
+        this.userFitcoins = resp[0]['fitcoins'] + " fitcoins"
     });
   }
 

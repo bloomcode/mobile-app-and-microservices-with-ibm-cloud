@@ -36,7 +36,7 @@ addSteps(BackendUrl: string, steps: string, userID: string) {
   let data = {
     'steps' : steps
   }
-  return this.http.post(BackendUrl + '/users/' + userID, data, {headers: headerss});
+  return this.http.put(BackendUrl + '/users/' + userID, data, {headers: headerss});
 }
 
 updateUser(BackendUrl: string, userID: string) {
