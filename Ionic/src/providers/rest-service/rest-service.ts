@@ -29,6 +29,10 @@ getLeaderBoard(BackendUrl: string) {
   return this.http.get(BackendUrl + '/leaderboard');
 }
 
+getProducts(BackendUrl: string) {
+  return this.http.get(BackendUrl + '/shop/products');
+}
+
 addSteps(BackendUrl: string, steps: string, userID: string) {
   let headerss = {
     'content-type':'application/json'
