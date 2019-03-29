@@ -63,23 +63,27 @@ generateNewAvatar = (req, res) => {
 }
 
 registerNewUser = (req, resp) => {
-    pool.query(`INSERT INTO users(userId, image, steps) VALUES ('${req.body.name}', '${req.body.image}', '0')`, (err, res) => {
+    const userId = req.body.name;
+    pool.query(`INSERT INTO users(userId, image, steps) VALUES ('${userId}', '${req.body.image}', '0')`, (err, res) => {
         console.log(err, res)
         if (err) {
             resp.end(err);
         } else {
-            resp.writeHead(200, {
+            resp.writeHead(201, {
                 "Content-Type": "text/json"
             });
-            resp.end(JSON.stringify(User));
+            resp.end(JSON.stringify({
+                name: req.body.name,
+                image: req.body.image,
+                steps: 0,
+                fitcoin: 0
+            }));
         }
     })
 }
 
 getAllUsersFromDB = (req, response) => {
-    console.log(chalk.red('\n----->> getAllUsersFromDB \n'));
     pool.query(`SELECT * from  users`, (err, res) => {
-        console.log("IN getAllUsersFromDB Query")
         if (err) {
             throw err;
         }
@@ -90,7 +94,29 @@ getAllUsersFromDB = (req, response) => {
 
 getAllUsersWithoutImage = (req, response) => {
     pool.query(`SELECT userId, steps from users`, (err, res) => {
-        console.log("IN getAllUsersWithoutImage Query")
+        if (err) {
+            throw err;
+        }
+        
+        response.status(200).json(res.rows);
+    });
+}
+
+getUser = (request, response) => {
+    const userId = request.params.userId;
+    pool.query(`SELECT * FROM users WHERE userId = $1`, [userId], (err, res) => {
+        if (err) {
+            throw err;
+        }
+        
+        response.status(200).json(res.rows);
+    });
+}
+
+updateUser = (request, response) => {
+    const userId = request.params.userId;
+    const steps = request.body.steps;
+    pool.query(`UPDATE users SET steps = $2 WHERE userId = $1`, [userId, steps], (err, res) => {
         if (err) {
             throw err;
         }
@@ -100,35 +126,14 @@ getAllUsersWithoutImage = (req, response) => {
 }
 
 delAllUsers = (req, response) => {
-    console.log(chalk.red('\n----->> delAllUsers \n'));
-
-
-    if (req.body.auth == "ConfirmDeleteFinalChecked") {
-        pool.query(`delete from userdata`, (err, res) => {
-            console.log("IN delAllUsers Query")
-            if (err) {
-                console.log(err);
-                response.writeHead(404, {
-                    "Content-Type": "text/json"
-                });
-                response.end(JSON.stringify(err));
-                return;
-            }
-            response.writeHead(200, {
-                "Content-Type": "text/json"
-            });
-            response.end(JSON.stringify("Deleted all user"))
-        });
-    }else{
-        response.writeHead(401, {
-            "Content-Type": "text/json"
-        });
-        response.end("UnAuthorised...!!!!");
-    }
-
-
+    pool.query(`DELETE FROM users`, (err, res) => {
+        if (err) {
+            throw err;
+        }
+        
+        response.status(200).send("Users deleted");
+    });
 }
-
 
 var server = http.createServer(app);
 
@@ -152,6 +157,6 @@ app.get("/users/generate", (req, res) => {
 app.post("/users", registerNewUser);
 app.get("/users/complete", getAllUsersFromDB);
 app.get("/users", getAllUsersWithoutImage);
-app.post("/deleteAllUsers", delAllUsers);
-// app.get("/users", getOneUser);
-// app.put("/users", updateOneUserSteps);
+app.delete("/users", delAllUsers);
+app.get("/users/:userId", getUser);
+app.put("/users/:userId", updateUser);
