@@ -54,12 +54,12 @@ public BackendUrl: string = "http://184.173.5.249:30006"
   });
   }
 
-  rechargeFitcoins() {
+  addSteps() {
     let alert = this.alertCtrl.create({
-      title: 'Fitcoins Recharge',
+      title: 'Log Steps',
       buttons: [
         {
-          text: 'Recharge', handler: data => {
+          text: 'Add', handler: data => {
               var Review = JSON.stringify(data.number);
               console.log(Review)
           }

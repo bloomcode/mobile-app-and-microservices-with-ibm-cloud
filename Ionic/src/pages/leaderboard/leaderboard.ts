@@ -25,7 +25,11 @@ export class LeaderboardPage {
   userList: User[];
 
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController,private httpClient: RestServiceProvider,private sanitizer: DomSanitizer) {
-    let loading = this.loadingCtrl.create({
+
+  }
+
+  ionViewWillEnter() { 
+  let loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
    loading.present();
@@ -39,7 +43,6 @@ export class LeaderboardPage {
           
        }
        loading.dismiss();
-  });
-  
+  });   
 }
 }
