@@ -5,7 +5,7 @@ const express = require('express'),
     rest = require('restler'),
     uuid = require('uuid'),
     chalk = require('chalk')
-    db= require('./db');
+db = require('./db');
 const {
     Pool,
     Client
@@ -106,8 +106,9 @@ registerNewUser = (req, resp) => {
     }
 
 
-    console.log(User)
-    console.log(UserNoImage)
+    // console.log(User)
+    // console.log(UserNoImage)
+
     pool.connect();
 
     var UserData = Buffer.from(JSON.stringify(User)).toString('base64');
@@ -115,10 +116,14 @@ registerNewUser = (req, resp) => {
 
     pool.query(`INSERT INTO userdata(ID, WITHIMAGEDATA,NOIMAGEDATA)VALUES ('${User.userId}', '${UserData}','${UserDataNoImage}')`, (err, res) => {
         console.log(err, res)
-        if(err){
+        if (err) {
             resp.end(err);
-        }else{
-            resp.end("User Created Successfully...!!!");
+        } else {
+
+            resp.writeHead(200, {
+                "Content-Type": "text/json"
+            });
+            resp.end(JSON.stringify(User));
         }
         // client.end()
     })
@@ -130,9 +135,9 @@ registerNewUser = (req, resp) => {
 getAllUsersFromDB = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersFromDB \n'));
     var allUsersFromDB = [];
-    // pool.connect()
+    pool.connect();
 
-    db.connection();
+    // db.connection();
     pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")
         var i = 0;
@@ -150,8 +155,8 @@ getAllUsersFromDB = (req, response) => {
 getAllUsersWithoutImage = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersWithoutImage \n'));
     var allUsersWithoutImage = [];
-    
-    db.connection();
+
+    pool.connect();
 
     pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")

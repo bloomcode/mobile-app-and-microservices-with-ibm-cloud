@@ -6,18 +6,18 @@ const {
 
 
 const pool = new Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'postgres',
-    //   password: 'secretpassword',
-    port: 32768,
+    user: process.env.POSTGRES_USER || 'postgres',
+    host: process.env.POSTGRES_HOST || '127.0.0.1',
+    database: process.env.POSTGRES_DB || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || '',
+    port: process.env.POSTGRES_PORT || 32770,
 })
 
 function connection() {
 
     var defer = Q.defer();
 
-    pool.connect((err, pool, release) => {
+    pool.connect((err, client, release) => {
         if (err) {
             console.error('Error acquiring client', err.stack)
             defer.reject({

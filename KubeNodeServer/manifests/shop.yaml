@@ -35,6 +35,7 @@ spec:
       containers:
         - name: shop
           image: <ur-dockerregistry-image>
+          # image: us.icr.io/kubespace/node-shop
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
