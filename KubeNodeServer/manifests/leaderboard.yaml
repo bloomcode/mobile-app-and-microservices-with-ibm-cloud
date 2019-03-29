@@ -9,7 +9,7 @@ spec:
   type: NodePort
   ports:
   - protocol: TCP
-    port: 8080
+    port: 8081
     nodePort: 30002
   selector:
     app: leaderboard

@@ -25,11 +25,11 @@ function connection() {
             });
         }
         console.log("Establishing connection with postgres .... ")
-        pool.query('SELECT * from userdata', (err, result) => {
+        pool.query('SELECT * from users', (err, result) => {
             release()
             if (err) {
-                console.log("No userdata db found...!!!!\n Creating new db now...!!!")
-                pool.query('CREATE TABLE userdata ( ID VARCHAR (100) NOT NULL, WITHIMAGEDATA text NOT NULL, NOIMAGEDATA text NOT NULL);', (err, result) => {
+                console.log("No users db found...!!!!\n Creating new db now...!!!")
+                pool.query('CREATE TABLE users (userId text NOT NULL PRIMARY KEY, image text NOT NULL, steps bigint NOT NULL, fitcoins bigint NOT NULL);', (err, result) => {
                     release()
                     if (err) {
                         return console.error('Error executing query', err.stack)
@@ -38,7 +38,7 @@ function connection() {
                     defer.resolve();
                 })
             }
-            console.log("Successfully Connected to Postgres userdata Db ")
+            console.log("Successfully Connected to Postgres DB - " + process.env.POSTGRES_DB)
         })
     })
 

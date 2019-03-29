@@ -58,40 +58,16 @@ addProduct = (req, response) => {
 
 
 getAllUsersSorted = (req, response) => {
-    console.log(chalk.red('\n----->> getAllUsersSorted \n'));
-    var getAllUsersSorted = [];
-
     db.connection();
 
-    pool.query(`SELECT * from  userdata`, (err, res) => {
-        console.log("IN Query")
-        var i = 0;
-        for (var rows in res.rows) {
-            getAllUsersSorted.push(JSON.parse(Buffer.from(res.rows[i].withimagedata, 'base64').toString()));
-            i++;
+    pool.query(`SELECT * FROM  users ORDER BY fitcoins DESC`, (err, res) => {
+        if (err) {
+            throw err;
         }
-        // console.log(getAllUsersSorted.useId)
-        getAllUsersSorted = sortoutUser(getAllUsersSorted, 'steps');
-        console.log(getAllUsersSorted)
-        response.end(JSON.stringify(getAllUsersSorted))
+        
+        response.status(200).json(res.rows);
     });
 }
-
-function sortoutUser(poeple, key) {
-    var defer = Q.defer()
-
-    console.log(key);
-
-    return poeple.sort(function (a, b) {
-        var x = a[key];
-        var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
-
-    return defer.promise
-
-}
-
 
 var server = http.createServer(app);
 
@@ -113,4 +89,3 @@ server.on('listening', function onListening() {
 
 app.get('/leaderboard/health', healthCheck);
 app.get("/leaderboard", getAllUsersSorted)
-// app.get("/leaderboard/user", getUserPosition)
