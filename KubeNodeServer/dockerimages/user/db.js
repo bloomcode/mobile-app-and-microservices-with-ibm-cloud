@@ -18,9 +18,10 @@ function connection() {
 
     var defer = Q.defer();
 
-    pool.connect((err, pool, release) => {
+    pool.connect((err, client, release) => {
         if (err) {
-            console.error('Error acquiring client', err.stack)
+            console.error('Error acquiring client', err.stack);
+            client.release();
             defer.reject({
                 message: 'Failed to Connect to Postgres'
             });
