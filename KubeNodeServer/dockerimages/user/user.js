@@ -11,14 +11,10 @@ const {
     Client
 } = require('pg');
 
-
-
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false
 }));
-
-var AvatarData = {};
 
 const pool = new Pool({
     user: process.env.POSTGRES_USER || 'postgres',
@@ -40,22 +36,17 @@ var healthCheck = (request, response) => {
 };
 
 generateNewAvatar = (req, res) => {
-    // console.log("\n----->> generateNewAvatar \n")
     console.log(chalk.red('\n----->> generateNewAvatar \n'));
     var defer = Q.defer();
 
     rest.get(`http://avatar-rainbow.mybluemix.net/new`).on('complete', function (data, response) {
         if (response.statusCode == 200) {
             console.log("Success");
-            AvatarData = data;
-            // console.log(JSON.stringify(data));
-            // console.log(data);
 
             res.writeHead(200, {
                 "Content-Type": "text/json"
             });
             res.end(JSON.stringify(data));
-            //  res.end(JSON.stringify(AvatarData));
             defer.resolve(JSON.stringify(data));
         } else {
             console.log("Rejected");
@@ -67,54 +58,12 @@ generateNewAvatar = (req, res) => {
             });
         }
     });
+
     return defer.promise;
 }
 
 registerNewUser = (req, resp) => {
-    console.log(chalk.red('\n----->> registerNewUser \n'));
-    // var User = {
-    //     userId: uuid.v1(),
-    //     name: AvatarData.name,
-    //     image: AvatarData.image,
-    //     steps: 0,
-    //     stepsConvertedToFitcoin: 0,
-    //     fitcoin: 0
-    // }
-
-    // var UserNoImage = {
-    //     userId: uuid.v1(),
-    //     name: AvatarData.name,
-    //     steps: 0,
-    //     fitcoin: 0
-    // }
-
-
-    var User = {
-        userId: uuid.v1(),
-        name: req.body.name,
-        image: req.body.image,
-        steps: 0,
-        stepsConvertedToFitcoin: 0,
-        fitcoin: 0
-    }
-
-    var UserNoImage = {
-        userId: uuid.v1(),
-        name: req.body.name,
-        steps: 0,
-        fitcoin: 0
-    }
-
-
-    // console.log(User)
-    // console.log(UserNoImage)
-
-    // pool.connect();
-
-    var UserData = Buffer.from(JSON.stringify(User)).toString('base64');
-    var UserDataNoImage = Buffer.from(JSON.stringify(UserNoImage)).toString('base64');
-
-    pool.query(`INSERT INTO userdata(ID, WITHIMAGEDATA,NOIMAGEDATA)VALUES ('${User.userId}', '${UserData}','${UserDataNoImage}')`, (err, res) => {
+    pool.query(`INSERT INTO users(userId, image, steps) VALUES ('${req.body.name}', '${req.body.image}', '0')`, (err, res) => {
         console.log(err, res)
         if (err) {
             resp.end(err);
@@ -124,77 +73,31 @@ registerNewUser = (req, resp) => {
             });
             resp.end(JSON.stringify(User));
         }
-        // client.end()
     })
-    // console.log(UserData)
-
-    // resp.end(User);
 }
 
 getAllUsersFromDB = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersFromDB \n'));
-    var allUsersFromDB = [];
-    // pool.connect();
-
-    // db.connection();
-    pool.query(`SELECT * from  userdata`, (err, res) => {
+    pool.query(`SELECT * from  users`, (err, res) => {
         console.log("IN getAllUsersFromDB Query")
         if (err) {
-            console.log(err);
-            response.writeHead(404, {
-                "Content-Type": "text/json"
-            });
-            response.end(JSON.stringify(err));
-            return;
+            throw err;
         }
-        var i = 0;
-        for (var rows in res.rows) {
-            allUsersFromDB.push(JSON.parse(Buffer.from(res.rows[i].withimagedata, 'base64').toString()));
-            i++;
-        }
-        // console.log(allUsersFromDB)
-        console.log("user Count : ", i);
-        // pool.end();
-        response.writeHead(200, {
-            "Content-Type": "text/json"
-        });
-        response.end(JSON.stringify(allUsersFromDB));
+        
+        response.status(200).json(res.rows);
     });
-
 }
 
 getAllUsersWithoutImage = (req, response) => {
-    console.log(chalk.red('\n----->> getAllUsersWithoutImage \n'));
-    var allUsersWithoutImage = [];
-
-    // pool.connect();
-
-    pool.query(`SELECT * from  userdata`, (err, res) => {
+    pool.query(`SELECT userId, steps from users`, (err, res) => {
         console.log("IN getAllUsersWithoutImage Query")
         if (err) {
-            console.log(err);
-            response.writeHead(404, {
-                "Content-Type": "text/json"
-            });
-            response.end(JSON.stringify(err));
-            return;
+            throw err;
         }
-        var i = 0;
-        for (var rows in res.rows) {
-            allUsersWithoutImage.push(JSON.parse(Buffer.from(res.rows[i].noimagedata, 'base64').toString()));
-            i++;
-        }
-        // console.log(allUsersWithoutImage);
-        console.log("user Count : ", i);
-        // pool.end();
-        response.writeHead(200, {
-            "Content-Type": "text/json"
-        });
-        response.end(JSON.stringify(allUsersWithoutImage))
+        
+        response.status(200).json(res.rows);
     });
 }
-
-
 
 delAllUsers = (req, response) => {
     console.log(chalk.red('\n----->> delAllUsers \n'));
