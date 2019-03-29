@@ -2,7 +2,8 @@ const express = require('express'),
     app = express(),
     http = require('http'),
     Q = require('q'),
-    chalk = require('chalk');
+    chalk = require('chalk'),
+    db = require('./db');
 const {
     Pool,
     Client
@@ -38,7 +39,7 @@ var healthCheck = (request, response) => {
 addProduct = (req, response) => {
     console.log(chalk.red('\n----->> addProduct \n'));
 
-    pool.connect();
+    db.connection();
 
     console.log(JSON.stringify(req.body))
     var addProductData = Buffer.from(JSON.stringify(req.body)).toString('base64');
@@ -59,9 +60,10 @@ addProduct = (req, response) => {
 getAllUsersSorted = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersSorted \n'));
     var getAllUsersSorted = [];
-    pool.connect()
 
-    pool.query(`SELECT * from  userdatabase64`, (err, res) => {
+    db.connection();
+
+    pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")
         var i = 0;
         for (var rows in res.rows) {
@@ -98,12 +100,17 @@ server.listen(process.env.PORT || 3002);
 server.on('error', function onError(error) {
     console.log(JSON.stringify(error));
 });
+
+
+
 server.on('listening', function onListening() {
     var addr = server.address();
+    db.connection();
+
     console.log('Listening on ' + addr.port);
 });
 
 
-app.get('/user/health', healthCheck);
+app.get('/leaderboard/health', healthCheck);
 app.get("/leaderboard", getAllUsersSorted)
 // app.get("/leaderboard/user", getUserPosition)
