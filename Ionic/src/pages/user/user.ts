@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import {RestServiceProvider} from '../../providers/rest-service/rest-service'
 import { t } from '@angular/core/src/render3';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Storage } from '@ionic/storage';
 
 
 
@@ -36,7 +37,7 @@ public userId: string;
 public BackendUrl: string = "http://173.193.99.112:30000"
 
 
-  constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public storage: Storage) {
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
@@ -46,6 +47,7 @@ public BackendUrl: string = "http://173.193.99.112:30000"
       this.httpClient.registerUser(this.BackendUrl, Avatar).subscribe((Response) => {
         loading.dismiss();
         this.userName = Response['name']
+        this.storage.set('userName', this.userName);
         this.userFitcoins = Response['fitcoins'] + " fitcoins"
         this.userId = Response['name']
         this.displayImage ="data:image/png;base64, "+ useravatar.image;

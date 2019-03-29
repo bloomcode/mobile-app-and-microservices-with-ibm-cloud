@@ -33,6 +33,16 @@ getProducts(BackendUrl: string) {
   return this.http.get(BackendUrl + '/shop/products');
 }
 
+buyProduct(BackendUrl: string, product: string, userName: string) {
+  let headerss = {
+    'content-type':'application/json'
+  };
+  let data = {
+    'name' : userName
+  }
+  return this.http.post(BackendUrl + '/shop/order/' + product, data, {headers: headerss});
+}
+
 addSteps(BackendUrl: string, steps: string, userID: string) {
   let headerss = {
     'content-type':'application/json'

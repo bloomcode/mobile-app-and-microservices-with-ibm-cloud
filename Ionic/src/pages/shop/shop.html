@@ -17,6 +17,7 @@
             <h1>{{product.item}}</h1>
             <p>{{product.stock}}</p>
             <ion-note item-right>{{product.coins}}</ion-note> 
+            <button ion-button clear (click)="buyProduct(product)" item-end>Buy</button>
           </ion-item>
     </ion-list>
   </div>
