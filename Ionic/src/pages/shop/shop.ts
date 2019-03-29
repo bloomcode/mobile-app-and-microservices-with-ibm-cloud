@@ -28,10 +28,10 @@ export class ShopPage {
   }
 
   ionViewWillEnter() { 
-    this.refreshProduct()
+    this.refreshProducts()
   }
 
-  refreshProduct() {
+  refreshProducts() {
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
@@ -68,7 +68,12 @@ export class ShopPage {
         let alert = this.alertCtrl.create({
           title: 'Success',
           subTitle: 'Order Succesfully Placed',
-          buttons: ['Ok']
+          buttons: [{
+            text: 'Ok',
+            handler: () => {
+              this.refreshProducts();
+            }
+          }]
         });
         alert.present();
       }
