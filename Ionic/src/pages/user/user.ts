@@ -8,23 +8,7 @@ import { t } from '@angular/core/src/render3';
 import { DomSanitizer } from '@angular/platform-browser';
 
 
-export class User {
-  public userId: string;
-  public name: string;
-  public image: Object;
-  public steps: number;
-  public stepsConvertedToFitcoin: number;
-  public fitcoin: number;
-  
-  constructor(userId, name, image, steps, stepsConvertedToFitcoin, fitcoin) {
-    this.userId = userId
-    this.name = name
-    this.image = image
-    this.steps = steps
-    this.stepsConvertedToFitcoin = stepsConvertedToFitcoin
-    this.fitcoin = fitcoin
-  }
-}
+
 
 export class UserAvatar {
   public name: string;
@@ -43,14 +27,14 @@ export class UserAvatar {
 })
 export class UserPage {
 
-public displayImage: string = '';
+public displayImage: string;
 public userFitcoins: string;
 public userSteps: string;
 public userScrollView: string;
 public userName: string;
 public userId: string;
 public BackendUrl: string = "http://184.173.5.249:30000"
-public currentUser: User;
+
 
   constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer) {
 
@@ -63,7 +47,7 @@ public currentUser: User;
         this.userName = Response['name']
         this.userFitcoins = Response['fitcoin']
         this.userId = Response['userId']
-        console.log("vittal" + Response)
+      
       })
   });
 
