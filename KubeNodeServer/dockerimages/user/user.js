@@ -25,7 +25,7 @@ const pool = new Pool({
     host: process.env.POSTGRES_HOST || '127.0.0.1',
     database: process.env.POSTGRES_DB || 'postgres',
     password: process.env.POSTGRES_PASSWORD || '',
-    port: process.env.POSTGRES_PORT || 5432,
+    port: process.env.POSTGRES_PORT || 32770,
 })
 
 var healthCheck = (request, response) => {
@@ -70,12 +70,29 @@ generateNewAvatar = (req, res) => {
     return defer.promise;
 }
 
-registerNewUser = (req, res) => {
+registerNewUser = (req, resp) => {
     console.log(chalk.red('\n----->> registerNewUser \n'));
+    // var User = {
+    //     userId: uuid.v1(),
+    //     name: AvatarData.name,
+    //     image: AvatarData.image,
+    //     steps: 0,
+    //     stepsConvertedToFitcoin: 0,
+    //     fitcoin: 0
+    // }
+
+    // var UserNoImage = {
+    //     userId: uuid.v1(),
+    //     name: AvatarData.name,
+    //     steps: 0,
+    //     fitcoin: 0
+    // }
+
+
     var User = {
         userId: uuid.v1(),
-        name: AvatarData.name,
-        image: AvatarData.image,
+        name: req.body.name,
+        image: req.body.image,
         steps: 0,
         stepsConvertedToFitcoin: 0,
         fitcoin: 0
@@ -83,11 +100,14 @@ registerNewUser = (req, res) => {
 
     var UserNoImage = {
         userId: uuid.v1(),
-        name: AvatarData.name,
+        name: req.body.name,
         steps: 0,
         fitcoin: 0
     }
 
+
+    console.log(User)
+    console.log(UserNoImage)
     pool.connect();
 
     var UserData = Buffer.from(JSON.stringify(User)).toString('base64');
@@ -95,11 +115,16 @@ registerNewUser = (req, res) => {
 
     pool.query(`INSERT INTO userdata(ID, WITHIMAGEDATA,NOIMAGEDATA)VALUES ('${User.userId}', '${UserData}','${UserDataNoImage}')`, (err, res) => {
         console.log(err, res)
+        if(err){
+            resp.end(err);
+        }else{
+            resp.end("User Created Successfully...!!!");
+        }
         // client.end()
     })
     // console.log(UserData)
 
-    // res.end(User);
+    // resp.end(User);
 }
 
 getAllUsersFromDB = (req, response) => {
