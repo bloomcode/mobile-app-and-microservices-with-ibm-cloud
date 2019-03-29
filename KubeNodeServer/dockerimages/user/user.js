@@ -21,11 +21,11 @@ app.use(express.urlencoded({
 var AvatarData = {};
 
 const pool = new Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'postgres',
-    //   password: 'secretpassword',
-    port: 32768,
+    user: process.env.POSTGRES_USER || 'postgres',
+    host: process.env.POSTGRES_HOST || '127.0.0.1',
+    database: process.env.POSTGRES_DB || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || '',
+    port: process.env.POSTGRES_PORT || 5432,
 })
 
 var healthCheck = (request, response) => {
