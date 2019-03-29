@@ -1,5 +1,21 @@
 
+
 # End to End MicroServices design on Kubernetes with Node.js and PostGres
+
+Table of Contents
+=================
+
+   * [End to End MicroServices design on Kubernetes with Node.js and PostGres](#end-to-end-microservices-design-on-kubernetes-with-nodejs-and-postgres)
+      * [Flow](#flow)
+      * [Included Components](#included-components)
+      * [Featured Technologies](#featured-technologies)
+   * [Prerequisites](#prerequisites)
+   * [Steps](#steps)
+         * [1. Clone the repo](#1-clone-the-repo)
+         * [2. Create IBM Cloud Kubernetes Service](#2-create-ibm-cloud-kubernetes-service)
+         * [3. Create and Deploy Nodejs Microservices](#3-create-and-deploy-nodejs-microservices)
+   * [Learn more](#learn-more)
+   * [License](#license)
 
 In this code pattern, we will create a simple step tracker iOS app written in Swift. The application's backend will written in Node.js.
 
@@ -63,31 +79,36 @@ Create an IBM Cloud Kubernetes Service if you don't already have one:
 
 * [IBM Cloud Kubernetes Service](https://console.bluemix.net/containers-kubernetes/catalog/cluster)
 
-<!-- ### 3. Create and Deploy Kitura Microservices
+* Simple tutorial to build an docker image and deploy it on kube - [click here](https://cloud.ibm.com/docs/containers?topic=containers-cs_apps_tutorial#cs_apps_tutorial_lesson1)
 
-* The Kitura applications are already built. Their source code is in their respective folders in `containers` folder. You can open the Xcode project file to open it in Xcode.
+### 3. Create and Deploy Nodejs Microservices
+
+* The Nodejs applications are already built. Their source code is in their respective folders in `KubeNodeServer/dockerimages/` folder. 
+
 
 ```
-$ export DOCKERHUB_USERNAME=<your-dockerhub-username>
+$ ibmcloud cr build -t registry.<region>.bluemix.net/<namespace>/node-users:latest KubeNodeServer/dockerimages/user
 
-$ docker build -t $DOCKERHUB_USERNAME/kitura-users:latest containers/users/
-$ docker build -t $DOCKERHUB_USERNAME/kitura-shop:latest containers/shop/
-$ docker build -t $DOCKERHUB_USERNAME/kitura-leaderboards:latest containers/leaderboards/
+$ ibmcloud cr build -t registry.<region>.bluemix.net/<namespace>/node-shop:latest KubeNodeServer/dockerimages/shop
 
-$ docker push $DOCKERHUB_USERNAME/kitura-users:latest
-$ docker push $DOCKERHUB_USERNAME/kitura-shop:latest
-$ docker push $DOCKERHUB_USERNAME/kitura-leaderboards:latest
+$ ibmcloud cr build -t registry.<region>.bluemix.net/<namespace>/node-leaderboard:latest KubeNodeServer/dockerimages/leaderboard
+
 ```
 
-* Edit these Kubernetes manifests files in `manifests` folder to use your own images
+> Note : 
+Depending on the ibmcloud user plan ,your ability to push images onto ibmcloud container registry might be limited.
+
+For namespace and registry details [click here](https://cloud.ibm.com/docs/services/Registry?topic=registry-index#registry_namespace_add)
+
+* Edit these Kubernetes manifests files in `KubeNodeServer/manifests` folder to use your own images
   * leaderboard.yaml
   * shop.yaml
   * users.yaml
 
 ```
-e.g. manifests/leaderboard.yaml
+e.g. KubeNodeServer/manifests/leaderboard.yaml
 ...
-    image: anthonyamanse/kitura-leaderboard:1.0
+    image: charankumar/node-leaderboard:1.0
     ## change the value to the images you just built in the previous step.
 ...
 ```
@@ -97,8 +118,8 @@ e.g. manifests/leaderboard.yaml
 
 ```
 ## Create the credentials and deploy PostgreSQL
-$ kubectl create cm postgres-cm --from-env-file=postgres-config.env
-$ kubectl apply -f manifests/postgres.yaml
+$ kubectl create cm postgres-cm --from-env-file=KubeNodeServer/postgres-config.env
+$ kubectl apply -f KubeNodeServer/manifests/postgres.yaml
 
 ## Make sure the postgres container is running
 $ kubectl get pods
@@ -107,15 +128,15 @@ $ kubectl get pods
 * You can now deploy the Kitura microservices
 
 ```
-$ kubectl apply -f manifests/leaderboard.yaml
-$ kubectl apply -f manifests/shop.yaml
-$ kubectl apply -f manifests/users.yaml
+$ kubectl apply -f KubeNodeServer/manifests/leaderboard.yaml
+$ kubectl apply -f KubeNodeServer/manifests/shop.yaml
+$ kubectl apply -f KubeNodeServer/manifests/users.yaml
 
 ## Make sure the 3 of them are running
 $ kubectl get pods
 ```
 
-### 4. Expose with Kubernetes Ingress
+<!-- ### 4. Expose with Kubernetes Ingress
 
 * You would want to expose the backend you deployed so that the iOS app can communicate with it. With Kubernetes Ingress, this would allow you to expose these microservices. You can use the provided Ingress Subdomain that came with the IBM Cloud Kubernetes Service.
 
@@ -157,27 +178,27 @@ $ kubectl apply -f ingress-prod.yaml
  
  
  
-* Test the Kitura routes to make sure they are running properly
+* Test the Node servers to make sure they are running properly
 
 ```
 
 ## Create a user
-$ curl -X POST -H 'Content-type: application/json' -d "$(curl http://localhost:3000/users/generate)" http://localhost:3000/users
+$ curl -X POST -H 'Content-type: application/json' -d "$(curl http://<Kube-public-ip>:<nodeport>/users/generate)" http://<Kube-public-ip>:<nodeport>/users
 
 {"name":"Gisk Igofrow","userId":"6A213D99-7C08-4BF2-A250-D24E3310236B","stepsConvertedToFitcoin":0,"image":"..." ...}
 
 ## Get the users
-$ curl http://localhost:3000/users
+$ curl http://<Kube-public-ip>:<nodeport>/users
 
 [{"name":"Gisk Igofrow","userId":"6A213D99-7C08-4BF2-A250-D24E3310236B" ...}]
 
 ## Create products
-curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartwatch.json)" http://localhost:3001/shop/products
-curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/runningshoes.json)" http://localhost:3001/shop/products
-curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartbodyscale.json)" http://localhost:3001/shop/products
+curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartwatch.json)" http://<Kube-public-ip>:<nodeport>/shop/products
+curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/runningshoes.json)" http://<Kube-public-ip>:<nodeport>/shop/products
+curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartbodyscale.json)" http://<Kube-public-ip>:<nodeport>/shop/products
 
 ## Get the products
-$ curl http://localhost:3001/shop/products
+$ curl http://<Kube-public-ip>:<nodeport>/shop/products
 
 [{"productId":"smartwatch","price":20,"quantity":100,"name":"Smart Watch"},{"productId":"shoes","price":50,"quantity":25,"name":"Running Shoes"},{"productId":"bodyScale","price":5,"quantity":50,"name":"Body Scale"}]
 ```
