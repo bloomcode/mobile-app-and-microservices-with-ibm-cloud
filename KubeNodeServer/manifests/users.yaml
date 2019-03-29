@@ -10,6 +10,7 @@ spec:
   ports:
   - protocol: TCP
     port: 8080
+    nodePort: 30000
   selector:
     app: users
 ---
@@ -33,6 +34,7 @@ spec:
     spec:
       containers:
         - name: users
+          # image: us.icr.io/kubespace/node-users
           image: <ur-dockerregistry-image>
           imagePullPolicy: Always
           ports:

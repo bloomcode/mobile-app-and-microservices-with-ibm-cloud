@@ -5,7 +5,7 @@ const express = require('express'),
     rest = require('restler'),
     uuid = require('uuid'),
     chalk = require('chalk')
-    db= require('./db');
+db = require('./db');
 const {
     Pool,
     Client
@@ -21,11 +21,11 @@ app.use(express.urlencoded({
 var AvatarData = {};
 
 const pool = new Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'postgres',
-    //   password: 'secretpassword',
-    port: 32768,
+    user: process.env.POSTGRES_USER || 'postgres',
+    host: process.env.POSTGRES_HOST || '127.0.0.1',
+    database: process.env.POSTGRES_DB || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || '',
+    port: process.env.POSTGRES_PORT || 32770,
 })
 
 var healthCheck = (request, response) => {
@@ -70,12 +70,29 @@ generateNewAvatar = (req, res) => {
     return defer.promise;
 }
 
-registerNewUser = (req, res) => {
+registerNewUser = (req, resp) => {
     console.log(chalk.red('\n----->> registerNewUser \n'));
+    // var User = {
+    //     userId: uuid.v1(),
+    //     name: AvatarData.name,
+    //     image: AvatarData.image,
+    //     steps: 0,
+    //     stepsConvertedToFitcoin: 0,
+    //     fitcoin: 0
+    // }
+
+    // var UserNoImage = {
+    //     userId: uuid.v1(),
+    //     name: AvatarData.name,
+    //     steps: 0,
+    //     fitcoin: 0
+    // }
+
+
     var User = {
         userId: uuid.v1(),
-        name: AvatarData.name,
-        image: AvatarData.image,
+        name: req.body.name,
+        image: req.body.image,
         steps: 0,
         stepsConvertedToFitcoin: 0,
         fitcoin: 0
@@ -83,10 +100,14 @@ registerNewUser = (req, res) => {
 
     var UserNoImage = {
         userId: uuid.v1(),
-        name: AvatarData.name,
+        name: req.body.name,
         steps: 0,
         fitcoin: 0
     }
+
+
+    // console.log(User)
+    // console.log(UserNoImage)
 
     pool.connect();
 
@@ -95,19 +116,28 @@ registerNewUser = (req, res) => {
 
     pool.query(`INSERT INTO userdata(ID, WITHIMAGEDATA,NOIMAGEDATA)VALUES ('${User.userId}', '${UserData}','${UserDataNoImage}')`, (err, res) => {
         console.log(err, res)
+        if (err) {
+            resp.end(err);
+        } else {
+
+            resp.writeHead(200, {
+                "Content-Type": "text/json"
+            });
+            resp.end(JSON.stringify(User));
+        }
         // client.end()
     })
     // console.log(UserData)
 
-    // res.end(User);
+    // resp.end(User);
 }
 
 getAllUsersFromDB = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersFromDB \n'));
     var allUsersFromDB = [];
-    // pool.connect()
+    pool.connect();
 
-    db.connection();
+    // db.connection();
     pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")
         var i = 0;
@@ -125,8 +155,8 @@ getAllUsersFromDB = (req, response) => {
 getAllUsersWithoutImage = (req, response) => {
     console.log(chalk.red('\n----->> getAllUsersWithoutImage \n'));
     var allUsersWithoutImage = [];
-    
-    db.connection();
+
+    pool.connect();
 
     pool.query(`SELECT * from  userdata`, (err, res) => {
         console.log("IN Query")

@@ -10,6 +10,7 @@ spec:
   ports:
   - protocol: TCP
     port: 8080
+    nodePort: 30001
   selector:
     app: shop
 ---
@@ -34,6 +35,7 @@ spec:
       containers:
         - name: shop
           image: <ur-dockerregistry-image>
+          # image: us.icr.io/kubespace/node-shop
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
