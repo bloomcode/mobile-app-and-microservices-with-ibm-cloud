@@ -113,7 +113,7 @@ getUser = (request, response) => {
 
 updateUser = (request, response) => {
     const userId = request.params.userId;
-    const stepsToAdd = request.body.steps;
+    const stepsToAdd = parseInt(request.body.steps);
 
     var steps = 0;
     var fitcoins = 0;
