@@ -54,6 +54,29 @@ public BackendUrl: string = "http://184.173.5.249:30006"
   });
   }
 
+  rechargeFitcoins() {
+    let alert = this.alertCtrl.create({
+      title: 'Fitcoins Recharge',
+      buttons: [
+        {
+          text: 'Recharge', handler: data => {
+              var Review = JSON.stringify(data.number);
+              console.log(Review)
+          }
+        }
+      ],
+      inputs: [
+        {
+          name: 'number',
+          placeholder: 'please enter the number',
+        },
+      ],
+      cssClass: 'alertstar',
+      enableBackdropDismiss: false
+    });
+    alert.present();
+  }
+
   presentAlert() {
     let alert = this.alertCtrl.create({
       title: 'Hi, ' + this.userName,
@@ -62,5 +85,7 @@ public BackendUrl: string = "http://184.173.5.249:30006"
     });
     alert.present();
   }
+
+  
  
 }

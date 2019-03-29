@@ -20,4 +20,12 @@
   <h4 id="user-heading4" style="color:#000000;text-align:center;">
     {{userFitcoins}}
   </h4>
+  <div id="user-container3" *ngIf="displayImage">
+    <button id="recharge-button" ion-button  (click)="rechargeFitcoins()" color="stable" block>
+      Recharge Fitcoins
+  </button>
+  </div>
+
+ 
+   
 </ion-content>
