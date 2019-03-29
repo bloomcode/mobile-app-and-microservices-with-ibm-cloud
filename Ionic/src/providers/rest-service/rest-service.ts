@@ -29,6 +29,16 @@ getLeaderBoard(BackendUrl: string) {
   return this.http.get(BackendUrl + '/leaderboard');
 }
 
+addSteps(BackendUrl: string, steps: string, userID: string) {
+  let headerss = {
+    'content-type':'application/json'
+  };
+  let data = {
+    'steps' : steps
+  }
+  return this.http.post(BackendUrl + '/users', data, {headers: headerss});
+}
+
 generateAvatar(BackendUrl: string) {
   let headerss = {'Access-Control-Allow-Origin': '*', 
   'Cache-Control': 'no-cache',
