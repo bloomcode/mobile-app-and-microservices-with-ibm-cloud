@@ -21,7 +21,7 @@ export class User {
   templateUrl: 'leaderboard.html'
 })
 export class LeaderboardPage {
-  public BackendUrl: string = "http://localhost:8081"
+  public BackendUrl: string = "http://173.193.99.112:30002"
   userList: User[];
 
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController,private httpClient: RestServiceProvider,private sanitizer: DomSanitizer) {

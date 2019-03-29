@@ -33,7 +33,7 @@ public userSteps: string;
 public userScrollView: string;
 public userName: string;
 public userId: string;
-public BackendUrl: string = "http://localhost:8080"
+public BackendUrl: string = "http://173.193.99.112:30000"
 
 
   constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
