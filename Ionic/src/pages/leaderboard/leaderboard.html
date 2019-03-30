@@ -8,12 +8,12 @@
 <ion-content padding id="page6">
   <div id="leaderboard-container4">
     <ion-list id="leaderboard-list4">
-      <ion-item color="none" id="leaderboard-list-item14"  *ngFor="let user of userList">
+      <ion-item color="none" id="leaderboard-list-item14" *ngFor="let user of userList">
         <ion-avatar item-left>
           <img [src]="sanitizer.bypassSecurityTrustUrl(user.image)" />
         </ion-avatar>
         <h1>{{user.name}}</h1>
-        <p>{{user.steps}}</p>
+        <h3 item-right>{{user.steps}}</h3>
       </ion-item>
     </ion-list>
   </div>

@@ -7,25 +7,21 @@
 </ion-header>
 <ion-content padding id="page5">
   <div id="user-container3" *ngIf="displayImage">
-    <img [src]="sanitizer.bypassSecurityTrustUrl(displayImage)" style="display:block;width:150px;height:auto;margin-left:auto;margin-right:auto;" />
+    <img [src]="sanitizer.bypassSecurityTrustUrl(displayImage)"
+      style="display:block;width:150px;height:auto;margin-left:auto;margin-right:auto;" />
   </div>
   <h3 id="user-heading3" style="color:#000000;text-align:center;">
     {{userName}}
   </h3>
-  <div id="user-markdown6" style="text-align:center;" class="show-list-numbers-and-dots">
-    <p style="color:#000000;">
-      {{userId}}
-    </p>
-  </div>
   <h4 id="user-heading4" style="color:#000000;text-align:center;">
     {{userFitcoins}}
   </h4>
   <div id="user-container3" *ngIf="displayImage">
-    <button id="recharge-button" ion-button  (click)="addSteps()" color="stable" block>
+    <button id="recharge-button" ion-button (click)="addSteps()" color="stable" block>
       Add Steps
-  </button>
+    </button>
   </div>
 
- 
-   
+
+
 </ion-content>
