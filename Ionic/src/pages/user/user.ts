@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { RestServiceProvider } from '../../providers/rest-service/rest-service'
 import { DomSanitizer } from '@angular/platform-browser';
-import { Storage, IonicStorageModule } from '@ionic/storage';
+import { Storage } from '@ionic/storage';
 
 export class UserAvatar {
   public name: string;
