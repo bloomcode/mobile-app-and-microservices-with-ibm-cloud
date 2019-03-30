@@ -40,13 +40,27 @@ When you have completed this sample, you will understand how to:
 
 # Prerequisites
 
-* Create a _Standard_ Kubernetes cluster with [IBM Bluemix Kubernetes Service](https://console.bluemix.net/docs/containers/cs_cli_install.html#cs_cli_install) to deploy in cloud. The code here is regularly tested against [Kubernetes Cluster from IBM Cloud Kubernetes Service](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov).
-
-<!-- * [Helm](https://helm.sh/) package manager. Helm will be needed to install [cert-manager](https://github.com/jetstack/cert-manager) for issuing certificates from _Let's Encrypt_. You can install Helm by going to through their [official documentation](https://github.com/kubernetes/helm/blob/master/docs/install.md). -->
-
-* [Xcode](https://developer.apple.com/xcode/) is needed for developing iOS apps.
-
-* Install [Docker](https://www.docker.com) by following the instructions [here](https://www.docker.com/community-edition#/download) for your preferred operating system. You would need docker if you want to build and use your own images. You would need to have a [Docker Hub](https://hub.docker.com/) account to push your images.
+* Create a _Standard_ Kubernetes cluster with [IBM Cloud Kubernetes Service](https://cloud.ibm.com/kubernetes/catalog/cluster) to deploy in cloud.
+* Setup access to your cluster using the 'Access' instructions available in the Cluster details page from the IBM Cloud dashboad
+* Install `Node.js` by downloading the setup from https://nodejs.org/en/ (Node.js 8.x or above)
+```
+$ node --version
+v8.6.0
+```
+* Install Cordova
+```
+$ sudo npm install -g cordova@7.0.1
+$ cordova --version
+7.0.1
+```
+* Install Ionic
+```
+$ sudo npm install -g ionic@3.19.0
+$ ionic --version
+3.19.0
+```
+* [Optional] If you want to run the mobile app in a Android / iPhone device, install [Android Studio](https://developer.android.com/studio/install) / [Xcode](https://developer.apple.com/xcode/) for the respective paltforms.
+* Install [Git] (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) CLI
 
 # Steps
 
