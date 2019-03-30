@@ -120,3 +120,126 @@ $ kubectl apply -f containers/config/users.yaml
 ```
 * Make sure the 3 of them are running
 $ kubectl get pods
+
+### 5. Expose with Kubernetes Ingress
+
+* You would want to expose the backend you deployed so that the mobile app can communicate with it. With Kubernetes Ingress, this would allow you to expose these microservices. You can use the provided Ingress Subdomain that came with the IBM Cloud Kubernetes Service.
+* Get the Ingress subdomain and Ingress secret values 
+```
+$ bx cs cluster-get <Your cluster name here>
+```
+* Modify `containers/config/ingress.yaml` to use the provided subdomain you have obtained above
+> If you want to use your own domain, proceed to step #7
+
+* Apply the Kubernetes Ingress resource
+
+```
+$ kubectl apply -f containers/config/ingress.yaml
+```
+
+### 5. Configure and run the Mobile app
+
+
+
+### 7. Use your own domain name and manage certificate with Let's Encrypt
+
+To enable TLS in your own domain, you may want to automate issuance of the TLS certificates. You can do this with `cert-manager` to request certificates from Let's Encrypt.
+
+* Go to your domain registrar and create an _**A record**_ for your domain to point to the IP address of your Kubernetes ingress. You can get the IP address of your ingress by doing:
+
+![sample A record](docs/sample-a-record.png)
+
+```
+$ kubectl get ing
+
+## NAME      HOSTS                  ADDRESS          PORTS     AGE
+## ingress   www.ibm-fitchain.com   169.48.XYZ.XYZ   80, 443   2d
+```
+
+* You would need to first initialize `helm`. This will install `tiller` in your cluster.
+
+```
+$ helm init
+```
+
+* You can now install `cert-manager`
+
+```
+$ helm install \
+    --name cert-manager \
+    --namespace kube-system \
+    stable/cert-manager
+```
+
+* Modify `cert-manager/issuer.yaml` to use your own valid email address.
+  > More details [here](https://cert-manager.readthedocs.io/en/latest/tutorials/acme/http-validation.html)
+
+```
+...
+email: EMAIL_ADDRESS
+## change it to a valid one
+...
+```
+
+* Deploy the issuer resource
+
+```
+$ kubectl apply -f cert-manager/issuer.yaml
+```
+
+* Modify `cert-manager/certificate.yaml`
+
+```
+...
+spec:
+
+  ## THIS WILL PRODUCE A CERTIFICATE NAMED ibm-fitchain-com-tls
+  secretName: ibm-fitchain-com-tls
+  issuerRef:
+    name: letsencrypt-prod
+
+  ## PROVIDE YOUR OWN DOMAIN NAME
+  commonName: www.ibm-fitchain.com
+  dnsNames:
+  - www.ibm-fitchain.com
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+
+      ## PROVIDE YOUR OWN DOMAIN NAME
+      - www.ibm-fitchain.com
+    - http01:
+        ingress: my-ingress
+      domains:
+
+      ## PROVIDE YOUR OWN DOMAIN NAME
+      - www.ibm-fitchain.com
+```
+
+* Deploy the certificate resource
+
+```
+$ kubectl apply -f cert-manager/certificate.yaml
+
+## Wait for the certificate to get issued
+$ kubectl describe certificate
+```
+
+* Once successful, you can check in your browser if your domain is working properly. If it has proper certificates, you should be able to see a Kitura starting page without security warning from your browser. _(You'll also see a lockpad icon beside your domain name)_
+
+# Links
+
+* [cert-manager](https://cert-manager.readthedocs.io/en/latest/index.html): A native Kubernetes certificate management controller. It can help with issuing certificates from a variety of sources, such as Let’s Encrypt, HashiCorp Vault or a simple signing keypair.
+
+# Learn more
+
+* **Kubernetes on IBM Cloud**: Deploy and manage your containers in [Kubernetes on IBM Cloud](https://www.ibm.com/cloud/container-service).
+* **Microservices and Container Orchestration**:
+Interested in microservices applications? Check out our other [Microservices Code Patterns](https://developer.ibm.com/code/technologies/microservices/) and [Container Orchestration Code Patterns](https://developer.ibm.com/code/technologies/container-orchestration/).
+
+# License
+This code pattern is licensed under the Apache Software License, Version 2.  Separate third party code objects invoked within this code pattern are licensed by their respective providers pursuant to their own separate licenses. Contributions are subject to the [Developer Certificate of Origin, Version 1.1 (DCO)](https://developercertificate.org/) and the [Apache Software License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.txt).
+
+[Apache Software License (ASL) FAQ](http://www.apache.org/foundation/license-faq.html#WhatDoesItMEAN)

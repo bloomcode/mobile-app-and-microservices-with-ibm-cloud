@@ -10,7 +10,7 @@ spec:
   ports:
   - protocol: TCP
     port: 8082
-    nodePort: 30001
+    #nodePort: 30001
   selector:
     app: shop
 ---
