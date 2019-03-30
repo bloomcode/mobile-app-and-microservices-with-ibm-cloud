@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, LoadingController } from 'ionic-angular';
+import { NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { RestServiceProvider } from '../../providers/rest-service/rest-service'
 import { DomSanitizer } from '@angular/platform-browser';
 import { Storage, IonicStorageModule } from '@ionic/storage';
-
-
-
 
 export class UserAvatar {
   public name: string;
@@ -16,7 +13,6 @@ export class UserAvatar {
     this.name = response['name']
   }
 }
-
 
 @Component({
   selector: 'page-user',
@@ -31,6 +27,33 @@ export class UserPage {
 
 
   constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public storage: Storage) {
+  }
+
+  ionViewWillEnter() {
+    this.storage.get('userName').then(userId => {
+      if (userId == null) {
+        // Fresh User
+        this.registerUser()
+      } else {
+        // Returning User
+        this.updateUserDetails(userId, true)
+      }
+    })
+  }
+
+  addSteps() {
+    this.httpClient.addSteps(this.BackendUrl, '10', this.userName).subscribe((response) => {
+      let alert = this.alertCtrl.create({
+        title: 'Success',
+        subTitle: 'We have added 10 steps to your account',
+        buttons: ['Cool']
+      });
+      alert.present();
+      this.updateUserDetails(this.userName, false);
+    });
+  }
+
+  registerUser() {
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
@@ -47,27 +70,34 @@ export class UserPage {
           this.presentAlert()
         })
       } else {
+        loading.present()
         this.showError()
       }
     });
   }
 
-  addSteps() {
-    this.httpClient.addSteps(this.BackendUrl, '10', this.userName).subscribe((response) => {
-      let alert = this.alertCtrl.create({
-        title: 'Success',
-        subTitle: 'We have added 10 steps to your account',
-        buttons: ['Cool']
+  updateUserDetails(userName, showIndicator) {
+    var loading: Loading;
+    if(showIndicator) {
+      loading = this.loadingCtrl.create({
+        content: 'Please wait...'
       });
-      alert.present();
-      this.updateUserDetails();
-    });
-  }
-
-  updateUserDetails() {
-    this.httpClient.updateUser(this.BackendUrl, this.userName).subscribe((resp) => {
-      console.log('vittal' + JSON.stringify(resp))
-      this.userFitcoins = resp[0]['fitcoins'] + " fitcoins"
+      loading.present();
+    }
+    this.httpClient.getUserInfo(this.BackendUrl, userName).subscribe((response) => {
+      if (response.status == 200) {
+        this.userFitcoins = response.body[0]['fitcoins'] + " fitcoins"
+        this.userName = response.body[0]['userid']
+        this.displayImage = "data:image/png;base64, " + response.body[0].image;
+        if(showIndicator) {
+          loading.dismiss()
+        }
+      } else {
+        if(showIndicator) {
+          loading.dismiss()
+        }
+        this.showError()
+      }
     });
   }
 

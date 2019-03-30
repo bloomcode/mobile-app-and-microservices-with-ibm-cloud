@@ -57,8 +57,10 @@ export class RestServiceProvider {
     return this.http.put(BackendUrl + '/users/' + userID, data, { headers: headers });
   }
 
-  updateUser(BackendUrl: string, userID: string) {
-    return this.http.get(BackendUrl + '/users/' + userID);
+  getUserInfo(BackendUrl: string, userID: string) {
+    return this.http.get(BackendUrl + '/users/' + userID, {
+      observe: 'response'
+    });
   }
 
   generateAvatar(BackendUrl: string) {
