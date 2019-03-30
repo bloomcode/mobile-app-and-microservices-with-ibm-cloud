@@ -177,7 +177,11 @@ $ curl $URL/shop/products
 [{"item":"Smart Watch","coins":20,"stock":100,"name":"Smart Watch"},{"productId":"shoes","price":50,"quantity":25,"name":"Running Shoes"},{"productId":"bodyScale","price":5,"quantity":50,"name":"Body Scale"}]
 ```
 
-### 7. Configure and run the Mobile app
+### 7. Configure and run the Ionic app
+
+<div style='float: center'>
+  <img style='width: 600px' src="https://raw.githubusercontent.com/bloomcode/mobile-app-and-microservices-with-ibm-cloud/master/assets/phone.jpg"></img>
+</div>
 
 * Configure the backend URLs here: 
 ```
@@ -185,7 +189,7 @@ ionic-app/src/pages/user/user.ts
 ```
 > Note: We separated the URLs into 3 backend URLs, to be able to work with applications exposed via NodePort, If you're using Ingress or if you have a router app that frontends the communication to microservices you can just use change the app to use 1   URL here
 
-* Build the Ionic app
+* For running on Browser
 ```
 cd fitlead-ionic-app
 npm install 
@@ -194,6 +198,8 @@ ionic serve
 ```
 * For running on iOS / Android 
 ```
+cd fitlead-ionic-app
+npm install
 ionic cordova platform add <ios | android>
 ionic cordova prepare
 ionic build
