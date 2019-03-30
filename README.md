@@ -139,7 +139,26 @@ $ kubectl apply -f containers/config/ingress.yaml
 
 ### 5. Configure and run the Mobile app
 
-
+* Configure the backend URLs here: 
+```
+ionic-app/src/pages/user/user.ts
+ionic-app/src/pages/leaderboard/leaderboard.ts
+ionic-app/src/pages/shop/shop.ts
+```
+* Build the Ionic app
+```
+cd fitlead-ionic-app
+npm install 
+ionic build
+ionic serve
+```
+* For running on iOS / Android 
+```
+ionic cordova platform add <ios | android>
+ionic cordova prepare
+ionic build
+ionic cordova run <ios | android>
+```
 
 ### 7. Use your own domain name and manage certificate with Let's Encrypt
 
