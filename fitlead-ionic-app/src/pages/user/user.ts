@@ -6,7 +6,12 @@ import { Storage } from '@ionic/storage';
 
 
 export class ConfigUrls {
-  //Add your microservice backend urls
+  // Add your microservice backend urls
+
+  // Note: Ideally, all of them will point to the same URL if the backend microservices are exposed 
+  // via Ingress. 
+  // For convenience of running the sample on Lite IBM Kubernetes clusters, we have
+  // separated the configuration to include URLs from all microservices here
   static userBackendUrl: string = "http://173.193.99.112:30000"
   static shopBackendUrl: string = "http://173.193.99.112:30001"
   static leaderboardBackendUrl: string = "http://173.193.99.112:30002"
