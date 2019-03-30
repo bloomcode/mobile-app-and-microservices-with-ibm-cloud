@@ -1,42 +1,20 @@
+# Develop Hybrid Mobile App with Microservices backend
 
-Table of Contents
-=================
+In this sample, we will create a simple step tracker mobile app developed using Ionic. The application's backend is composed of microservices that are written in Node JS. The application's backend microservices will be deployed in Kubernetes, a container orchestration platform. The sample app is a simple step tracker that rewards users with "fitcoins". 
 
-   * [End to End MicroServices design on Kubernetes with Node.js and PostGres](#end-to-end-microservices-design-on-kubernetes-with-nodejs-and-postgres)
-      * [Flow](#flow)
-      * [Included Components](#included-components)
-      * [Featured Technologies](#featured-technologies)
-   * [Prerequisites](#prerequisites)
-   * [Steps](#steps)
-      * [a. Clone the repo](#a-clone-the-repo)
-      * [b. Create IBM Cloud Kubernetes Service](#b-create-ibm-cloud-kubernetes-service)
-      * [c. Create and Deploy Nodejs Microservices](#c-create-and-deploy-nodejs-microservices)
-      * [d. Test the Node servers to make sure they are running properly](#d-test-the-node-servers-to-make-sure-they-are-running-properly)
-   * [Learn more](#learn-more)
-   * [License](#license)
+When you have completed this sample, you will understand how to:
 
-   
-# End to End MicroServices design on Kubernetes with Node.js and PostGres
-
-In this code pattern, we will create a simple step tracker iOS app written in Swift. The application's backend will written in Node.js.
-
-The 3 simple Node.js microservices will be deployed in Kubernetes, a container orchestration platform.
-
-The sample iOS app is a simple step tracker that rewards users with "fitcoins".
-
-When you have completed this code pattern, you will understand how to:
-
-* Build a server-side application with Node.js
-* Use [`pg`](https://www.npmjs.com/package/pg) npm package with Node.js to connect to a Postgres Database
-* Deploy node microservices in Kubernetes
-* Integrate an iOS app with the nodejs backend
-* Make Kubernetes available under a public domain
+* Build server-side application using microservices written in Node JS
+* Use Node JS to connect to a Database
+* Deploy the backend microservices in Kubernetes
+* Integrate an Ionic app with the application backend
+* Make Kubernetes available under a public domain with TLS.
 
 ## Flow
 
-<!-- ![Architecture diagram](docs/architecture.png) -->
+![Architecture diagram](assets/architecture.png)
 
-1. The first time the iOS app opens, it would try to register through the Users microservice.
+1. The first time the app opens, it would try to register through the Users microservice.
 2. The Users microservice communicates with an external service for its avatar assignment to the user.
 3. The Users microservice then persists the user info in the database. The Users microservice would also update the steps of the users and award them "fitcoins".
 4. The Leaderboard microservice provides a way to give the users standings with their steps count based on the stored data in the database.
@@ -45,20 +23,24 @@ When you have completed this code pattern, you will understand how to:
 ## Included Components
 
 * [IBM Cloud Kubernetes Service](https://console.bluemix.net/docs/containers/container_index.html): IBM Bluemix Container Service manages highly available apps inside Docker containers and Kubernetes clusters on the IBM Cloud.
-
+* [NodeJS](https://nodejs.org/): Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 * [PostgreSQL](https://www.postgresql.org/): Sophisticated open-source Object-Relational DBMS supporting almost all SQL constructs.
+
+## Few considerations
+
+1. In a real time scenario, to compute the number of steps we would use a pedometer on the application. In the sample, to be able to use simulate / test on web, we are using a manual UI element (button) that when pressed adds the steps. 
+2. As we use IBM Cloud Kubernetes Service, exposing apps via Ingress is not supported in Lite clusters. In such case, work around either creating a router application that frontends the backend microservices (or) expose apps using NodePort and configure the client app with the exposed NodePorts
 
 ## Featured Technologies
 
 * [Container Orchestration](https://www.ibm.com/cloud/container-service): Automating the deployment, scaling and management of containerized applications.
 * [Databases](https://en.wikipedia.org/wiki/IBM_Information_Management_System#.22Full_Function.22_databases): Repository for storing and managing collections of data.
 * [Microservices](https://www.ibm.com/developerworks/community/blogs/5things/entry/5_things_to_know_about_microservices?lang=en): Collection of fine-grained, loosely coupled services using a lightweight protocol to provide building blocks in modern application composition in the cloud.
-* [Mobile](https://mobilefirstplatform.ibmcloud.com/): Systems of engagement are increasingly using mobile technology as the platform for delivery.
-
+* [Ionic](https://ionicframework.com/): Ionic is the app development platform  to build cross platform mobile, web, and desktop apps all with one shared code base
 
 # Prerequisites
 
-* Create a _Standard_ Kubernetes cluster with [IBM Bluemix Kubernetes Service](https://console.bluemix.net/docs/containers/cs_cli_install.html#cs_cli_install) to deploy in cloud. The code here is regularly tested against [Kubernetes Cluster from IBM Cloud Kubernetes Service](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov) using Travis.
+* Create a _Standard_ Kubernetes cluster with [IBM Bluemix Kubernetes Service](https://console.bluemix.net/docs/containers/cs_cli_install.html#cs_cli_install) to deploy in cloud. The code here is regularly tested against [Kubernetes Cluster from IBM Cloud Kubernetes Service](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov).
 
 <!-- * [Helm](https://helm.sh/) package manager. Helm will be needed to install [cert-manager](https://github.com/jetstack/cert-manager) for issuing certificates from _Let's Encrypt_. You can install Helm by going to through their [official documentation](https://github.com/kubernetes/helm/blob/master/docs/install.md). -->
 
