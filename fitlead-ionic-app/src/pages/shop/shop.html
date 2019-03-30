@@ -8,12 +8,12 @@
 <ion-content padding id="page4">
   <div id="shop-container2">
     <ion-list id="shop-list3">
-        <ion-item color="none" id="shop-list-item10"  *ngFor="let product of productList">
-            <h1>{{product.item}}</h1>
-            <p>{{product.stock}}</p>
-            <ion-note item-right>{{product.coins}}</ion-note> 
-            <button ion-button clear (click)="buyProduct(product)" item-end>Buy</button>
-          </ion-item>
+      <ion-item color="none" id="shop-list-item10" *ngFor="let product of productList">
+        <h1>{{product.item}}</h1>
+        <p>{{product.stock}}</p>
+        <h3 item-right>{{product.coins}}</h3>
+        <button ion-button clear (click)="buyProduct(product)" item-end>Buy</button>
+      </ion-item>
     </ion-list>
   </div>
 </ion-content>
