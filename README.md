@@ -85,6 +85,21 @@ $ ibmcloud cr build -t <region>.icr.io/<namespace>/fitlead-leaderboard:latest co
 ```
 > Note:  Depending on the ibmcloud user plan ,your ability to push images onto ibmcloud container registry might be limited.
 
+**Note: ** You can run the images locally on your machine if you have a Docker installation
+```
+docker run -d  -p 31163:5432 postgres:9.6.2-alpine -e POSTGRES_HOST=localhost -e POSTGRES_PORT=31163 -e POSTGRES_DB=fitleaddb -e POSTGRES_USER=postgres
+
+docker build -t fitlead-users containers/src/users
+docker run -d -p 8080:8080 -e POSTGRES_HOST=localhost -e POSTGRES_PORT=31163 -e POSTGRES_DB=fitleaddb -e POSTGRES_USER=postgres fitlead-users 
+
+docker build -t fitlead-leaderboard containers/src/leaderboard
+docker run -d -p 8081:8081 -e POSTGRES_HOST= localhost -e POSTGRES_PORT=31163 -e POSTGRES_DB=fitleaddb -e POSTGRES_USER=postgres fitlead-leaderboard 
+
+docker build -t fitlead-shop containers/src/shop
+docker run -d -p 8082:8082 -e POSTGRES_HOST= localhost -e POSTGRES_PORT=31163 -e POSTGRES_DB=fitleaddb -e POSTGRES_USER=postgres fitlead-shop
+
+```
+
 ### 3. Create the credentials and deploy PostgreSQL
 
 * You'll need to deploy a simple Postgres container in your cluster. This is only for testing (data will be deleted if container is destroyed/restarted). You'll need to setup your own persistency or you can use [Compose for PostgreSQL](https://www.ibm.com/cloud/compose/postgresql) for production.
