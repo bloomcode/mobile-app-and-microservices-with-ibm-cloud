@@ -83,9 +83,9 @@ $ ibmcloud cr build -t <region>.icr.io/<namespace>/fitlead-users:latest containe
 $ ibmcloud cr build -t <region>.icr.io/<namespace>/fitlead-shop:latest containers/src/shop
 $ ibmcloud cr build -t <region>.icr.io/<namespace>/fitlead-leaderboard:latest containers/src/leaderboard
 ```
-> Note:  Depending on the ibmcloud user plan ,your ability to push images onto ibmcloud container registry might be limited.
+**Note:**  Depending on the ibmcloud user plan, your ability to push images onto ibmcloud container registry might be limited.
 
-**Note: ** You can run the images locally on your machine if you have a Docker installation
+**Note:** You can run the images locally on your machine if you have a Docker installation
 ```
 docker run -d  -p 31163:5432 postgres:9.6.2-alpine -e POSTGRES_HOST=localhost -e POSTGRES_PORT=31163 -e POSTGRES_DB=fitleaddb -e POSTGRES_USER=postgres
 
@@ -97,7 +97,6 @@ docker run -d -p 8081:8081 -e POSTGRES_HOST= localhost -e POSTGRES_PORT=31163 -e
 
 docker build -t fitlead-shop containers/src/shop
 docker run -d -p 8082:8082 -e POSTGRES_HOST= localhost -e POSTGRES_PORT=31163 -e POSTGRES_DB=fitleaddb -e POSTGRES_USER=postgres fitlead-shop
-
 ```
 
 ### 3. Create the credentials and deploy PostgreSQL
@@ -106,8 +105,8 @@ docker run -d -p 8082:8082 -e POSTGRES_HOST= localhost -e POSTGRES_PORT=31163 -e
 
 * Create the credentials and deploy PostgreSQL
 ```
-$ kubectl create cm postgres-cm --from-env-file=KubeNodeServer/postgres-config.env
-$ kubectl apply -f KubeNodeServer/manifests/postgres.yaml
+$ kubectl create cm postgres-cm --from-env-file=containers/config/postgres-config.env
+$ kubectl apply -f containers/config/postgres.yaml
 ```
 * Make sure the postgres container is running
 ```
@@ -134,7 +133,9 @@ $ kubectl apply -f containers/config/shop.yaml
 $ kubectl apply -f containers/config/users.yaml
 ```
 * Make sure the 3 of them are running
+```
 $ kubectl get pods
+```
 
 ### 5. Expose with Kubernetes Ingress
 
@@ -147,12 +148,11 @@ $ bx cs cluster-get <Your cluster name here>
 > If you want to use your own domain, proceed to step #7
 
 * Apply the Kubernetes Ingress resource
-
 ```
 $ kubectl apply -f containers/config/ingress.yaml
 ```
 
-**Note **: If you are using a Lite cluster where Ingress is not available, you need to expose the microservices as NodePorts
+**Note:** If you are using a Lite cluster where Ingress is not available, you need to expose the microservices as NodePorts
 and access the microservices using NodePort. To expose using NodePort, uncomment NodePort in corresponding manifests at
 `containers/config` and reapply the yaml configuration.
 
@@ -171,15 +171,10 @@ $ curl $URL/users
 
 [{"name":"Gisk Igofrow","userId":"6A213D99-7C08-4BF2-A250-D24E3310236B" ...}]
 
-## Create products
-curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartwatch.json)" $URL/shop/products
-curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/runningshoes.json)" $URL/shop/products
-curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartbodyscale.json)" $URL/shop/products
-
 ## Get the products
 $ curl $URL/shop/products
 
-[{"productId":"smartwatch","price":20,"quantity":100,"name":"Smart Watch"},{"productId":"shoes","price":50,"quantity":25,"name":"Running Shoes"},{"productId":"bodyScale","price":5,"quantity":50,"name":"Body Scale"}]
+[{"item":"Smart Watch","coins":20,"stock":100,"name":"Smart Watch"},{"productId":"shoes","price":50,"quantity":25,"name":"Running Shoes"},{"productId":"bodyScale","price":5,"quantity":50,"name":"Body Scale"}]
 ```
 
 ### 7. Configure and run the Mobile app
@@ -187,9 +182,9 @@ $ curl $URL/shop/products
 * Configure the backend URLs here: 
 ```
 ionic-app/src/pages/user/user.ts
-ionic-app/src/pages/leaderboard/leaderboard.ts
-ionic-app/src/pages/shop/shop.ts
 ```
+> Note: We separated the URLs into 3 backend URLs, to be able to work with applications exposed via NodePort, If you're using Ingress or if you have a router app that frontends the communication to microservices you can just use change the app to use 1   URL here
+
 * Build the Ionic app
 ```
 cd fitlead-ionic-app
@@ -210,8 +205,6 @@ ionic cordova run <ios | android>
 To enable TLS in your own domain, you may want to automate issuance of the TLS certificates. You can do this with `cert-manager` to request certificates from Let's Encrypt.
 
 * Go to your domain registrar and create an _**A record**_ for your domain to point to the IP address of your Kubernetes ingress. You can get the IP address of your ingress by doing:
-
-![sample A record](docs/sample-a-record.png)
 
 ```
 $ kubectl get ing
@@ -291,7 +284,7 @@ $ kubectl apply -f cert-manager/certificate.yaml
 $ kubectl describe certificate
 ```
 
-* Once successful, you can check in your browser if your domain is working properly. If it has proper certificates, you should be able to see a Kitura starting page without security warning from your browser. _(You'll also see a lockpad icon beside your domain name)_
+* Once successful, you can check in your browser if your domain is working properly. 
 
 # Links
 
