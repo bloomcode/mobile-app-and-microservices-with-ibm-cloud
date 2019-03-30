@@ -137,7 +137,37 @@ $ bx cs cluster-get <Your cluster name here>
 $ kubectl apply -f containers/config/ingress.yaml
 ```
 
-### 5. Configure and run the Mobile app
+**Note **: If you are using a Lite cluster where Ingress is not available, you need to expose the microservices as NodePorts
+and access the microservices using NodePort. To expose using NodePort, uncomment NodePort in corresponding manifests at
+`containers/config` and reapply the yaml configuration.
+
+### 6. Test the backend routes to make sure they are running properly
+
+```
+$ export URL=https://YOUR_INGRESS_SUBDOMAIN
+
+## Create a user
+$ curl -X POST -H 'Content-type: application/json' -d "$(curl $URL/users/generate)" $URL/users
+
+{"name":"Gisk Igofrow","userId":"6A213D99-7C08-4BF2-A250-D24E3310236B","stepsConvertedToFitcoin":0,"image":"..." ...}
+
+## Get the users
+$ curl $URL/users
+
+[{"name":"Gisk Igofrow","userId":"6A213D99-7C08-4BF2-A250-D24E3310236B" ...}]
+
+## Create products
+curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartwatch.json)" $URL/shop/products
+curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/runningshoes.json)" $URL/shop/products
+curl -X POST -H 'Content-type: application/json' -d "$(cat sampleProducts/smartbodyscale.json)" $URL/shop/products
+
+## Get the products
+$ curl $URL/shop/products
+
+[{"productId":"smartwatch","price":20,"quantity":100,"name":"Smart Watch"},{"productId":"shoes","price":50,"quantity":25,"name":"Running Shoes"},{"productId":"bodyScale","price":5,"quantity":50,"name":"Body Scale"}]
+```
+
+### 7. Configure and run the Mobile app
 
 * Configure the backend URLs here: 
 ```
@@ -160,7 +190,7 @@ ionic build
 ionic cordova run <ios | android>
 ```
 
-### 7. Use your own domain name and manage certificate with Let's Encrypt
+### 8. Use your own domain name and manage certificate with Let's Encrypt
 
 To enable TLS in your own domain, you may want to automate issuance of the TLS certificates. You can do this with `cert-manager` to request certificates from Let's Encrypt.
 
