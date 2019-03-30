@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, LoadingController, AlertController } from 'ionic-angular';
 import { RestServiceProvider } from '../../providers/rest-service/rest-service'
 import { Storage } from '@ionic/storage';
+import { ConfigUrls } from '../user/user';
 
 export class Product {
   public item: string;
@@ -20,7 +21,7 @@ export class Product {
   templateUrl: 'shop.html'
 })
 export class ShopPage {
-  public BackendUrl: string = "http://173.193.99.112:30001"
+  public BackendUrl: string = ConfigUrls.shopBackendUrl
   productList: Product[];
 
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private httpClient: RestServiceProvider, public storage: Storage, private alertCtrl: AlertController) {

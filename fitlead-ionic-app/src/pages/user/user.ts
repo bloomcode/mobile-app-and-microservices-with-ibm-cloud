@@ -4,6 +4,15 @@ import { RestServiceProvider } from '../../providers/rest-service/rest-service'
 import { DomSanitizer } from '@angular/platform-browser';
 import { Storage } from '@ionic/storage';
 
+
+export class ConfigUrls {
+  //Add your microservice backend urls
+  static userBackendUrl: string = "http://173.193.99.112:30000"
+  static shopBackendUrl: string = "http://173.193.99.112:30001"
+  static leaderboardBackendUrl: string = "http://173.193.99.112:30002"
+
+}
+
 export class UserAvatar {
   public name: string;
   public image: string;
@@ -23,7 +32,7 @@ export class UserPage {
   public displayImage: string;
   public userFitcoins: string;
   public userName: string;
-  public BackendUrl: string = "http://173.193.99.112:30000"
+  public BackendUrl: string = ConfigUrls.userBackendUrl
 
 
   constructor(public navCtrl: NavController, private httpClient: RestServiceProvider, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private loadingCtrl: LoadingController, public storage: Storage) {
