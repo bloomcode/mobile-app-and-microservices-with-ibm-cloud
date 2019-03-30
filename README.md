@@ -187,9 +187,9 @@ $ curl $URL/shop/products
 * Configure the backend URLs here: 
 ```
 ionic-app/src/pages/user/user.ts
-ionic-app/src/pages/leaderboard/leaderboard.ts
-ionic-app/src/pages/shop/shop.ts
 ```
+> Note: We separated the URLs into 3 backend URLs, to be able to work with applications exposed via NodePort, If you're using Ingress or if you have a router app that frontends the communication to microservices you can just use change the app to use 1 URL here
+
 * Build the Ionic app
 ```
 cd fitlead-ionic-app
