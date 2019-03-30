@@ -64,11 +64,15 @@ $ ionic --version
 
 # Steps
 
-## a. Clone the repo
+### 1. Clone the repo
 ```
-$ git clone https://github.com/bloomcode/mobile-app-and-microservices-with-ibm-cloud
+$ git clone https://github.com/bloomcode/mobile-app-and-microservices-with-ibm-cloud.git
 $ cd mobile-app-and-microservices-with-ibm-cloud
 ```
+### 2. Create and Deploy Backend Microservices
+
+* The backend microservices are already built. Their source code is in their respective folders in `containers` folder. You can open the repository folder in VS Code on IDE of your choice.
+
 
 ## b. Create IBM Cloud Kubernetes Service
 
