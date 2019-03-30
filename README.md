@@ -71,7 +71,18 @@ $ cd mobile-app-and-microservices-with-ibm-cloud
 ```
 ### 2. Create and Deploy Backend Microservices
 
-* The backend microservices are already built. Their source code is in their respective folders in `containers` folder. You can open the repository folder in VS Code on IDE of your choice.
+* Ensure you've a namespace setup in IBM Container Registry. 
+  - `ibmcloud cr namespace-list` lists the available namespaces
+  - `ibmcloud cr namespace-add <namespace>` to create a namespace
+
+* The source code for backend microservices are available in their respective folders in `containers/src` folder. You can open the repository folder in VS Code on IDE of your choice.
+
+* Build 
+
+```
+ibmcloud cr 
+
+```
 
 
 ## b. Create IBM Cloud Kubernetes Service
