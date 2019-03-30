@@ -21,7 +21,7 @@ export class Product {
   templateUrl: 'shop.html'
 })
 export class ShopPage {
-  public BackendUrl: string = ConfigUrls.shopBackendUr
+  public BackendUrl: string = ConfigUrls.shopBackendUrl
   productList: Product[];
 
   constructor(public navCtrl: NavController, private loadingCtrl: LoadingController, private httpClient: RestServiceProvider, public storage: Storage, private alertCtrl: AlertController) {
